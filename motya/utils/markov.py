@@ -1,6 +1,7 @@
 from markovify import NewlineText
 
 
+# TODO: refactor those functions
 def generate_random_sentence(messages_list):
     # dumping all db data to string
     text = ''

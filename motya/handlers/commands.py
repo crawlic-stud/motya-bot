@@ -9,5 +9,8 @@ from utils.markov import generate_random_sentence
 async def send_random_message(message: types.Message):
     messages = db.get_messages_from_chat(message.chat.id)
     sentence = generate_random_sentence(messages)
+    if not sentence:
+        await message.answer("я еще недостаточно у вас научился :(")
+        return
     await message.answer(sentence)
     

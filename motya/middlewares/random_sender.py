@@ -23,7 +23,8 @@ class RandomSender(BaseMiddleware):
         
         chat_id = message.chat.id
         messages = self.database.get_messages_from_chat(chat_id)
-        sentence = generate_random_sentence(messages)    
-        await message.answer(sentence)
-        logger.info(f"Sent random message to chat {chat_id}")
+        sentence = generate_random_sentence(messages)   
+        if sentence: 
+            await message.answer(sentence)
+            logger.info(f"Sent random message to chat {chat_id}")
         
