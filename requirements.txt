@@ -2,3 +2,4 @@ aiogram
 pymongo
 pymongo[srv]
 python-dotenv
+markovify

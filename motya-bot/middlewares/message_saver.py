@@ -17,10 +17,13 @@ class MessageSaver(BaseMiddleware):
         self.data = data
         self.database = database
     
-    async def on_process_message(self, message: types.Message, data: dict):
+    async def on_pre_process_message(self, message: types.Message, data: dict):
         msg_text = message.text
         chat_id = message.chat.id
         user_id = message.from_id
+        
+        if chat_id > 0: 
+            return
         
         if not self.data.get(chat_id):
             self.data[chat_id] = []
