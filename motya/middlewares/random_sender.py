@@ -7,8 +7,8 @@ from utils.database import Database
 from utils.tools import roll_chance
 from utils.markov import generate_random_sentence
 
-
-PROBABILITY = 20 / 100
+# TODO: fetch probability from database and store it somewhere
+PROBABILITY = 5 / 100
 logger = logging.getLogger("sender")
 
 
@@ -18,7 +18,6 @@ class RandomSender(BaseMiddleware):
         self.database = database
     
     async def on_process_message(self, message: types.Message, data: dict):
-        # TODO: fetch probability from database and store in some dict or so
         if not roll_chance(PROBABILITY):
             return
         

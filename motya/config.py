@@ -14,7 +14,7 @@ MONGO_URL = os.getenv("MONGO_URL")
 PROD_TOKEN = os.getenv("TG_TOKEN")
 TEST_TOKEN = os.getenv("TG_TEST_TOKEN")
 
-TG_TOKEN = PROD_TOKEN
+TG_TOKEN = TEST_TOKEN
 
 logging.basicConfig(level=logging.INFO)
 

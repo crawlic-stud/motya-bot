@@ -3,7 +3,7 @@ import random
 from aiogram import types
 
 from config import dp
-from models import MotyaCommand
+from filters.motya_command import MotyaCommand
 from utils.tools import words_after
 
 

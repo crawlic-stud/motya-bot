@@ -4,7 +4,8 @@ from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
 from utils.database import Database
-from models import MessageData, COMMAND_PREFIX
+from filters.motya_command import COMMAND_PREFIX
+from models import MessageData
 
 
 STORE_LIMIT = 5
