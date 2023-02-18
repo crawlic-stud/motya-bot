@@ -8,7 +8,7 @@ from utils.tools import roll_chance
 from utils.markov import generate_random_sentence
 
 
-PROBABILITY = 10 / 100
+PROBABILITY = 20 / 100
 logger = logging.getLogger("sender")
 
 
