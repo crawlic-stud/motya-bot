@@ -1,7 +1,12 @@
+import os
+
 from database import Database
+from dotenv import load_dotenv
 
 
-db = Database(
-    "https://motya-bot-default-rtdb.europe-west1.firebasedatabase.app/", "motya-key.json"
-)
+load_dotenv()
+MONGO_URL = os.getenv("MONGO_URL")
+
+messages_data = {}
+db = Database(MONGO_URL, "motya")
 

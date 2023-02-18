@@ -1,2 +1,4 @@
 aiogram
-firebase-admin
+pymongo
+pymongo[srv]
+python-dotenv
