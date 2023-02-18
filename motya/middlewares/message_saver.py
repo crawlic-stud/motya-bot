@@ -22,7 +22,7 @@ class MessageSaver(BaseMiddleware):
         chat_id = message.chat.id
         user_id = message.from_id
         
-        if chat_id > 0: 
+        if chat_id > 0 or msg_text is None: 
             return
         
         if not self.data.get(chat_id):
