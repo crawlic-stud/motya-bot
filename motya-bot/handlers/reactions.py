@@ -12,13 +12,6 @@ async def send_hello(message: types.Message):
     answer = random.choice(['ку', 'дороу', 'салам', 'привет'])
     await message.reply(answer)
 
-
-@dp.message_handler(MotyaCommand(["ты"], strict=True))
-async def send_maybe_you(message: types.Message):
-    user_id = message.from_user.id
-    answer = f'а может <a href="tg://user?id={user_id}">ты</a> {words_after(message.text, "ты")}?'
-    await message.reply(answer)
-    
     
 @dp.message_handler(MotyaCommand(["пок", "бб"]))
 async def send_bye(message: types.Message):
@@ -48,4 +41,11 @@ async def send_hahaha(message: types.Message):
     patterns = ['AXA', 'XA', 'AX', 'ПХ', 'BX']
     patterns_lower = list(map(str.lower, patterns))
     laugh = "".join([])
+    
+    
+@dp.message_handler(MotyaCommand(["ты"], strict=True))
+async def send_maybe_you(message: types.Message):
+    user_id = message.from_user.id
+    answer = f'а может <a href="tg://user?id={user_id}">ты</a> {words_after(message.text, "ты")}?'
+    await message.reply(answer)
     

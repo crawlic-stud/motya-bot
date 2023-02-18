@@ -16,7 +16,7 @@ class Database:
         return self._get_chat_collection(chat_id).find()
     
     def save_messages(self, chat_id: int, messages: List[MessageData]):
-        messages = [message.dict() for message in messages]
+        messages = [message.prepare_to_save() for message in messages]
         self._get_chat_collection(chat_id).insert_many(messages)
                 
     def get_messages_from_chat(self, chat_id: int):

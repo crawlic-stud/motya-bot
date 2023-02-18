@@ -1,9 +1,8 @@
 from typing import List
+from dataclasses import dataclass, asdict
 
 from aiogram.dispatcher.filters import Filter
 from aiogram import types
-
-from dataclasses import dataclass, asdict
 
 
 COMMAND_PREFIX = "мотя"
@@ -37,6 +36,6 @@ class MessageData:
     user_id: int
     text: str
         
-    def dict(self):
+    def prepare_to_save(self):
         return asdict(self)
     
