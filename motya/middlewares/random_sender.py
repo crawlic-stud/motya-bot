@@ -1,4 +1,5 @@
 import logging
+import asyncio
 
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
@@ -21,10 +22,13 @@ class RandomSender(BaseMiddleware):
         if not roll_chance(PROBABILITY):
             return
         
-        chat_id = message.chat.id
-        messages = self.database.get_messages_from_chat(chat_id)
-        sentence = generate_random_sentence(messages)   
-        if sentence: 
-            await message.answer(sentence)
-            logger.info(f"Sent random message to chat {chat_id}")
+        async def task():
+            chat_id = message.chat.id
+            messages = self.database.get_messages_from_chat(chat_id)
+            sentence = generate_random_sentence(messages)   
+            if sentence: 
+                await message.answer(sentence)
+                logger.info(f"Sent random message to chat {chat_id}")
+        
+        asyncio.create_task(task())
         
