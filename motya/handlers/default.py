@@ -4,5 +4,5 @@ from config import dp
 
 
 @dp.message_handler()
-async def send_start(message: types.Message):
+async def save_message(message: types.Message):
     pass

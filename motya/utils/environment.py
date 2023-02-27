@@ -1,17 +1,17 @@
 import sys
 
 
-def change_token(main_token):
+def change_token(token: str) -> None:
     with open("motya/config.py", "r", encoding="utf-8") as f:
         lines = f.readlines()
         for i, line in enumerate(lines):
             if line.startswith("TG_TOKEN"):
-                lines[i] = f"TG_TOKEN = {main_token}\n"
+                lines[i] = f"TG_TOKEN = {token}\n"
     with open("motya/config.py", "w", encoding="utf-8") as f:
         f.writelines(lines)
 
 
-def check_environment():
+def check_environment() -> bool:
     try:
         is_test = sys.argv[1]
     except IndexError:

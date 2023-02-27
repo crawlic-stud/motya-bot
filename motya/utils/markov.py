@@ -1,28 +1,30 @@
+from typing import List, Union
+
 from markovify import NewlineText
 
 
 MAX_TRIES = 1000
 
 
-def first_try(text):
+def first_try(text: str) -> Union[str, None]:
     text_model = NewlineText(input_text=text, well_formed=False)
     sentence = text_model.make_sentence()
     return sentence
 
 
-def second_try(text):
+def second_try(text: str) -> Union[str, None]:
     text_model = NewlineText(input_text=text, well_formed=False)
     sentence = text_model.make_sentence(tries=MAX_TRIES)
     return sentence
 
 
-def third_try(text):
+def third_try(text: str) -> Union[str, None]:
     text_model = NewlineText(input_text=text, well_formed=False, state_size=1)
     sentence = text_model.make_sentence(tries=MAX_TRIES)
     return sentence
 
 
-def generate_sentence(text):
+def generate_sentence(text: str) -> str:
     sentence = first_try(text)
     if not sentence:
         sentence = second_try(text)
@@ -31,7 +33,7 @@ def generate_sentence(text):
     return sentence
 
 
-def generate_random_sentence(messages):
+def generate_random_sentence(messages: List[str]) -> str:
     if not messages:
         return
     text = "\n".join(messages)
