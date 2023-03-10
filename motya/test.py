@@ -46,6 +46,6 @@ if __name__ == "__main__":
     # messages = db.get_messages_from_chat(-1001669933530)
     # print(generate_random_sentence(messages))
     # asyncio.run(motya.send_message(-1001669933530, "test"))
-    feed_copypastas_to_bot()
+    # feed_copypastas_to_bot()
     ...
     
