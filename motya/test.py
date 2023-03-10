@@ -1,11 +1,9 @@
 import time
-import asyncio
 import requests
 from bs4 import BeautifulSoup
 
 from config import db, motya
 from models import MessageData
-from utils.markov import generate_random_sentence
 
 
 def feed_copypastas_to_bot():
