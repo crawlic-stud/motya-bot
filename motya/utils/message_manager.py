@@ -1,25 +1,28 @@
 from typing import List
 from pathlib import Path
+import json
 
 from aiogram import types
-from markovify import NewlineText, Text
+from markovify import Text
 
 from .chat_history import get_text_from_txt, CHAT_HISTORY_PATH
 from .markov import generate_sentence
 from data.anekdots import combine_all_anekdots
 
 
-def _create_anekdot_model(model_class):
+def _create_anekdot_model():
     print("fetching anekdots...")
     path = combine_all_anekdots()
     text = path.read_text(encoding="utf-8")
     print("creating model...")
-    model = model_class(text, well_formed=False)
-    return model
+    model = Text(text, well_formed=False)
+    model = model.to_dict()
+    model_path = Path.cwd() / "motya" / "data" / "models" / "anekdots.json"
+    with open(model_path, "w", encoding="utf-8") as f:
+        json.dump(model, f, indent=4)
 
 
-# ANEKDOT_NEWLINE_MODEL = _create_anekdot_model(NewlineText)
-ANEKDOT_TEXT_MODEL = _create_anekdot_model(Text)
+# ANEKDOT_TEXT_MODEL = _create_anekdot_model()
 
 
 def _get_chat_history(chat_id: int) -> str:
