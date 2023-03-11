@@ -72,7 +72,10 @@ def combine_all_anekdots() -> None:
     all_path.write_text("")
     with open(all_path, "a", encoding="utf-8") as f:
         for path in ANEKDOTS_FOLDER.glob("*.txt"):
-            f.write(path.read_text(encoding="utf-8") + "\n")
+            anekdots = path.read_text(encoding="utf-8")
+            anekdots = anekdots.split(". ")
+            anekdots = list(map(str.strip, anekdots))
+            f.write("\n".join(anekdots) + "\n")
     
 
 # print(get_tags_links())
