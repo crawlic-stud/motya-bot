@@ -10,15 +10,13 @@ from .markov import generate_sentence
 from data.anekdots import ANEKDOTS_FOLDER
 
 
-def _get_anekdots_models() -> List[Text]:
+def _get_anekdots_paths() -> List[Text]:
+    paths = []
     for path in ANEKDOTS_FOLDER.glob("*txt"):
-        paths = []
-        if not path.name.startswith("anekdots"):
-            paths.append(path)
-    return [Text(p.read_text(encoding="utf-8"), well_formed=False) for p in paths]
-
-
-ANEKDOTS_MODELS = _get_anekdots_models()
+        if path.name.startswith("anekdots"):
+            continue
+        paths.append(path)
+    return paths
 
 
 def _get_chat_history(chat_id: int) -> str:
@@ -52,6 +50,8 @@ async def random_sentence(messages: List[str], chat_id: int) -> str:
 
 async def random_anekdot() -> str:
     await types.ChatActions.typing()
-    model = random.choice(ANEKDOTS_MODELS)
+    paths = _get_anekdots_paths()
+    theme = random.choice(paths)
+    model = Text(theme.read_text(encoding="utf-8"), well_formed=False)
     sentence = model.make_sentence(tries=1000) or ""
     return sentence.lower()
