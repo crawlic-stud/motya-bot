@@ -1,10 +1,24 @@
 from typing import List
 from pathlib import Path
+import random
 
 from aiogram import types
+from markovify import Text
 
 from .chat_history import get_text_from_txt, CHAT_HISTORY_PATH
 from .markov import generate_sentence
+from data.anekdots import ANEKDOTS_FOLDER
+
+
+def _get_anekdots_models() -> List[Text]:
+    for path in ANEKDOTS_FOLDER.glob("*txt"):
+        paths = []
+        if not path.name.startswith("anekdots"):
+            paths.append(path)
+    return [Text(p.read_text(encoding="utf-8"), well_formed=False) for p in paths]
+
+
+ANEKDOTS_MODELS = _get_anekdots_models()
 
 
 def _get_chat_history(chat_id: int) -> str:
@@ -30,7 +44,14 @@ async def random_sentence_from_messages(messages: List[str]) -> str:
 
 
 async def random_sentence(messages: List[str], chat_id: int) -> str:
-    chat_history = _get_chat_history(chat_id) or ""
+    chat_history = _get_chat_history(chat_id)
     text = await _get_text(messages)
     sentence = generate_sentence(text + chat_history)
+    return sentence.lower()
+
+
+async def random_anekdot() -> str:
+    await types.ChatActions.typing()
+    model = random.choice(ANEKDOTS_MODELS)
+    sentence = model.make_sentence(tries=1000) or ""
     return sentence.lower()

@@ -2,7 +2,13 @@ from aiogram import types
 
 from config import dp, db
 from filters.motya_command import MotyaCommand
-from utils.message_manager import random_sentence, random_sentence_from_messages
+from utils.message_manager import random_sentence, random_sentence_from_messages, random_anekdot
+
+
+@dp.message_handler(MotyaCommand(["анекдот", "анек"], strict=True))
+async def send_pasta(message: types.Message):
+    anekdot = await random_anekdot()
+    await message.reply(anekdot) if anekdot else None
 
 
 @dp.message_handler(MotyaCommand(["паста"], strict=True))
