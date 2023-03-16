@@ -1,10 +1,9 @@
 from aiogram import types
 
 from config import dp, db
-from filters.motya_command import MotyaQuestion
+from filters.motya_command import MotyaCommand
 
 from utils.message_manager import random_sentence_with_start
-
 
 
 def answer_starts_with(starts):
@@ -16,16 +15,21 @@ def answer_starts_with(starts):
 
 
 dp.register_message_handler(
-    answer_starts_with(["это", "так"]), 
-    MotyaQuestion(["что"], strict=True)
-) 
-
-dp.register_message_handler(
-    answer_starts_with(["потому"]), 
-    MotyaQuestion(["почему"], strict=True)
+    answer_starts_with(["ну", "хз", "супер", "не", "что"]), 
+    MotyaCommand(["как тебе"], strict=False)
 ) 
 
 dp.register_message_handler(
     answer_starts_with(["так", "вот"]), 
-    MotyaQuestion(["как"], strict=True)
+    MotyaCommand(["как"], strict=True)
+) 
+
+dp.register_message_handler(
+    answer_starts_with(["это", "такое"]), 
+    MotyaCommand(["что"], strict=True)
+) 
+
+dp.register_message_handler(
+    answer_starts_with(["потому"]), 
+    MotyaCommand(["почему"], strict=True)
 ) 
