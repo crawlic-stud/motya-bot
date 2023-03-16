@@ -52,6 +52,7 @@ async def random_anekdot() -> str:
     await types.ChatActions.typing()
     paths = _get_anekdots_paths()
     theme = random.choice(paths)
-    model = Text(theme.read_text(encoding="utf-8"), well_formed=False)
+    model = Text(theme.read_text(encoding="utf-8"),
+                 well_formed=True, state_size=3)
     sentence = model.make_sentence(tries=1000) or ""
     return sentence.lower()
