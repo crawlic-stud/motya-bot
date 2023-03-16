@@ -75,3 +75,4 @@ def combine_all_anekdots() -> Path:
             anekdots = list(map(str.strip, anekdots))
             f.write("\n".join(anekdots) + "\n")
     return all_path
+    

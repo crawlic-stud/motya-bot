@@ -7,7 +7,7 @@ from utils.message_manager import random_sentence, random_sentence_from_messages
 
 @dp.message_handler(MotyaCommand(["анекдот", "анек"], strict=True))
 async def send_pasta(message: types.Message):
-    anekdot = await random_anekdot()
+    anekdot = await random_anekdot(3) or await random_anekdot(2)
     await message.reply(anekdot) if anekdot else await message.reply("пшл нх")
 
 
