@@ -6,7 +6,7 @@ from aiogram import types
 from markovify import Text
 
 from .chat_history import get_text_from_txt, CHAT_HISTORY_PATH
-from .markov import generate_sentence
+from .markov import generate_sentence, generate_sentence_with_start
 from data.anekdots import ANEKDOTS_FOLDER
 
 
@@ -45,6 +45,14 @@ async def random_sentence(messages: List[str], chat_id: int) -> str:
     chat_history = _get_chat_history(chat_id)
     text = await _get_text(messages)
     sentence = generate_sentence(text + chat_history)
+    return sentence.lower()
+
+
+async def random_sentence_with_start(starts: List[str], messages: List[str], chat_id: int) -> str:
+    chat_history = _get_chat_history(chat_id)
+    text = await _get_text(messages)
+    start = random.choice(starts)
+    sentence = generate_sentence_with_start(text + chat_history, keyword=start)
     return sentence.lower()
 
 

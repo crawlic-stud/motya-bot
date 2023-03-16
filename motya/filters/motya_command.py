@@ -29,4 +29,16 @@ class MotyaCommand(Filter):
             is_command = is_prefixed and any(command in msg for command in self.commands)
             
         return is_command
-    
+
+
+class MotyaQuestion(MotyaCommand):
+    def __init__(
+        self, 
+        commands: List[str], 
+        strict: bool = False
+    ) -> None:
+        super().__init__(commands, strict)
+
+    async def check(self, message: types.Message) -> bool:
+        is_command = await super().check(message)
+        return is_command and message.text.endswith("?")

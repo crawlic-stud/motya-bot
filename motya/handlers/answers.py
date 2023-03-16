@@ -1,0 +1,31 @@
+from aiogram import types
+
+from config import dp, db
+from filters.motya_command import MotyaQuestion
+
+from utils.message_manager import random_sentence_with_start
+
+
+
+def answer_starts_with(starts):
+    async def handler(message: types.Message):
+        messages = db.get_messages_from_chat(message.chat.id)
+        sentence = await random_sentence_with_start(starts, messages, message.chat.id)
+        await message.reply(sentence) if sentence else None
+    return handler
+
+
+dp.register_message_handler(
+    answer_starts_with(["это", "так"]), 
+    MotyaQuestion(["что"], strict=True)
+) 
+
+dp.register_message_handler(
+    answer_starts_with(["потому"]), 
+    MotyaQuestion(["почему"], strict=True)
+) 
+
+dp.register_message_handler(
+    answer_starts_with(["так", "вот"]), 
+    MotyaQuestion(["как"], strict=True)
+) 
