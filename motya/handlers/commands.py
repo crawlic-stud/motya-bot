@@ -1,12 +1,12 @@
 from aiogram import types
 
-from config import dp, db
-from filters.motya_command import MotyaCommand, MotyaQuestion
+from config import dp, db, motya
+from filters.motya_command import MotyaCommand
+from filters.reply import Reply
 from utils.message_manager import (
     random_sentence, 
     random_sentence_from_messages, 
     random_anekdot,
-    random_sentence_with_start
 )
 
 
@@ -34,3 +34,8 @@ async def send_random_message(message: types.Message):
         # await message.answer("я еще недостаточно у вас научился :(")
         return
     await message.answer(sentence)
+
+
+@dp.message_handler(Reply(bot=motya))
+async def answer_more(message: types.Message):
+    return await send_random_message(message)

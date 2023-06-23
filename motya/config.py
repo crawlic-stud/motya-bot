@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 motya = Bot(TG_TOKEN, parse_mode="HTML")
 dp = Dispatcher(bot=motya)
 
-# dict to temporary store messages 
+# dict to temporary store messages
 messages_data = {}
 chat_offset = {}
 db = Database(MONGO_URL, "motya")
@@ -29,4 +29,3 @@ db = Database(MONGO_URL, "motya")
 # middleware for saving messages to DB
 dp.setup_middleware(MessageSaver(messages_data, db))
 dp.setup_middleware(RandomSender(db))
-
