@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 ANEKDOTS_FOLDER = Path.cwd() / "motya" / "files" / "anekdots" 
 
 
-
 def get_tags_links() -> Dict[str, str]:
     base_url = "https://www.anekdot.ru"
     req = requests.get(base_url + "/tags/")
@@ -66,8 +65,7 @@ def save_all_anekdots() -> None:
         print("-"*50)    
 
 
-
-def combine_all_anekdots() -> None:
+def combine_all_anekdots() -> Path:
     all_path = ANEKDOTS_FOLDER / "anekdots.txt"
     all_path.write_text("")
     with open(all_path, "a", encoding="utf-8") as f:
@@ -76,8 +74,5 @@ def combine_all_anekdots() -> None:
             anekdots = anekdots.split(". ")
             anekdots = list(map(str.strip, anekdots))
             f.write("\n".join(anekdots) + "\n")
+    return all_path
     
-
-# print(get_tags_links())
-# save_all_anekdots()
-combine_all_anekdots()

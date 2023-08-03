@@ -6,20 +6,20 @@ from aiogram import types
 
 class Reaction(Filter):
     def __init__(
-        self, 
-        patterns: List[str], 
+        self,
+        patterns: List[str],
         strict: bool = False
-     ) -> None:
+    ) -> None:
         super().__init__()
         self.patterns = patterns
         self.strict = strict
-        
+
     async def check(self, message: types.Message) -> bool:
         msg = message.text.lower()
-        
+
         if self.strict:
-            is_command = any(command in msg.split() for command in self.patterns)
+            is_pattern = any(pattern in msg.split() for pattern in self.patterns)
         else:
-            is_command = any(command in msg for command in self.patterns)
-            
-        return is_command
+            is_pattern = any(pattern in msg for pattern in self.patterns)
+
+        return is_pattern

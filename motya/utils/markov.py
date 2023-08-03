@@ -7,24 +7,37 @@ MAX_TRIES = 1000
 MAX_WORDS = 150
 
 
+def _catch_empty_chain(func):
+    def wrapper(text: str, *args, **kwargs):
+        try:
+            return func(text, *args, **kwargs)
+        except KeyError:
+            return ""
+    return wrapper
+
+
+@_catch_empty_chain
 def first_try(text: str) -> Union[str, None]:
     text_model = NewlineText(input_text=text, well_formed=False)
     sentence = text_model.make_sentence(max_words=MAX_WORDS)
     return sentence
 
 
+@_catch_empty_chain
 def second_try(text: str) -> Union[str, None]:
     text_model = NewlineText(input_text=text, well_formed=False)
     sentence = text_model.make_sentence(tries=MAX_TRIES, max_words=MAX_WORDS)
     return sentence
 
 
+@_catch_empty_chain
 def third_try(text: str) -> Union[str, None]:
     text_model = NewlineText(input_text=text, well_formed=False, state_size=1)
     sentence = text_model.make_sentence(tries=MAX_TRIES)
     return sentence
 
 
+@_catch_empty_chain
 def generate_sentence(text: str) -> str:
     sentence = first_try(text)
     if not sentence:
@@ -34,15 +47,11 @@ def generate_sentence(text: str) -> str:
     return sentence
 
 
-# def generate_random_answer(messages_list, keyword='hello!'):
-#     # dumping all db data to string
-#     text = f'{keyword}\n'
-#     for message in messages_list:
-#         text += message + '\n'
-
-#     text_model = NewlineText(input_text=text, well_formed=False, state_size=1)
-#     answer_word = keyword.split(' ')
-#     print(answer_word[0], keyword)
-#     sentence = text_model.make_sentence_with_start(beginning=answer_word[0])
-
-#     return sentence
+@_catch_empty_chain
+def generate_sentence_with_start(text, keyword):
+    text_model = NewlineText(input_text=text, well_formed=False)
+    sentence = text_model.make_sentence_with_start(
+        beginning=keyword,
+        strict=False,
+        tries=MAX_TRIES)
+    return sentence or ""
