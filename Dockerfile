@@ -1,6 +1,6 @@
 FROM python:3.10.8
 
-ADD src/main.py .
+ADD motya/main.py .
 
 COPY requirements.txt /tmp/requirements.txt
 COPY . .
