@@ -2,6 +2,7 @@ import os
 import logging
 
 from aiogram import Bot, Dispatcher
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from dotenv import load_dotenv
 
 from utils.database import Database
@@ -12,14 +13,13 @@ from middlewares.random_sender import RandomSender
 load_dotenv()
 MONGO_URL = os.getenv("MONGO_URL")
 PROD_TOKEN = os.getenv("TG_TOKEN")
-TEST_TOKEN = os.getenv("TG_TEST_TOKEN")
 
-TG_TOKEN = TEST_TOKEN
+TG_TOKEN = PROD_TOKEN
 
 logging.basicConfig(level=logging.INFO)
 
 motya = Bot(TG_TOKEN, parse_mode="HTML")
-dp = Dispatcher(bot=motya)
+dp = Dispatcher(bot=motya, storage=MemoryStorage())
 
 # dict to temporary store messages
 messages_data = {}
