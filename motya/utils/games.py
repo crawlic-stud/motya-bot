@@ -21,7 +21,7 @@ class HangmanGame:
     @property
     def won(self):
         return all(letter in self.guessed_letters for letter in self.word)
-    
+
     def render(self):
         word = self.word
         for letter in self.word.strip():
@@ -31,6 +31,34 @@ class HangmanGame:
         if not self.lost:
             return f"{word}\n\n{PICS[self.step]}"
         return f"{self.word}\n\n{PICS[-1]}"
+
+
+@dataclass
+class WordleGame:
+    word: str
+    prev_guesses: list[str] = field(default_factory=list)
+
+    @property
+    def lost(self):
+        return len(self.prev_guesses) >= len(self.word)
+
+    def calculate_colors(self, guess: str) -> str:
+        colors = ""
+        for original_letter, guessed_letter in zip(self.word, guess):
+            if original_letter == guessed_letter:
+                colors += "🟩"
+            elif guessed_letter in self.word:
+                colors += "🟨"
+            else:
+                colors += "⬜️"
+        return colors
+
+    def render(self) -> str:
+        game_rendered = []
+        for prev_guess in self.prev_guesses:
+            game_rendered.append(self.calculate_colors(prev_guess))
+            game_rendered.append("   ".join(prev_guess).upper())
+        return "\n".join(game_rendered)
 
 
 def messages_to_words(messages: list[str], max_word_length: int = 10, min_word_length: int = 5) -> list[str]:
@@ -48,16 +76,6 @@ def get_word(chat_id: int, max_length: int):
     words = messages_to_words(all_messages, max_length) or ["писька"]
     word = random.choice(words)
     return word
-
-
-def run_one_step(game: HangmanGame) -> HangmanGame:
-    if game.step > len(PICS) - 1:
-        return game
-
-    # if game.last_guess in game.word:
-    #     game.guessed_letters.add(game.last_guess)
-    # elif :
-    #     game.wrong_letters.
 
 
 if __name__ == "__main__":
