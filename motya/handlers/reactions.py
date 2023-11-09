@@ -22,5 +22,9 @@ async def send_hahaha(message: types.Message):
 
 @dp.message_handler(Reaction(["ссор", "ругат", "ругал", "поссор", "руган"]))
 async def update_arguments_count(message: types.Message):
+    arg_time = db.get_days_since_last_argument(message.chat.id)
     db.insert_new_argument(message.chat.id)
-    await message.reply("зафиксировал ссору. ну и дураки вы.")
+    await message.reply(
+        "зафиксировал ссору. ну и дураки вы."
+        + f"с прошлой ссоры прошло всего лишь {arg_time}"
+    )
