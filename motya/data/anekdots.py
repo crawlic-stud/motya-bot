@@ -16,6 +16,8 @@ def get_tags_links() -> Dict[str, str]:
         return {}
     soup = BeautifulSoup(req.text, "html.parser")
     tags_cloud = soup.select_one(".tags-cloud")
+    if tags_cloud is None:
+        return {}
     tags = tags_cloud.find_all("a")
     result = {}
     for tag in tags:

@@ -1,7 +1,7 @@
 import random
 
 from aiogram import types
-from config import dp
+from config import dp, db
 from filters.reaction import Reaction
 from utils.tools import roll_chance
 
@@ -18,3 +18,9 @@ async def send_hahaha(message: types.Message):
     )
     if roll_chance(LAUGH_CHANCE):
         await message.answer(laugh)
+
+
+@dp.message_handler(Reaction(["ссор", "ругат", "ругал", "поссор", "руган"]))
+async def update_arguments_count(message: types.Message):
+    db.insert_new_argument(message.chat.id)
+    await message.reply("зафиксировал ссору. ну и дураки вы.")

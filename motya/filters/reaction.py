@@ -1,11 +1,9 @@
-from typing import List
-
 from aiogram import types
 from aiogram.dispatcher.filters import Filter
 
 
 class Reaction(Filter):
-    def __init__(self, patterns: List[str], strict: bool = False) -> None:
+    def __init__(self, patterns: list[str], strict: bool = False) -> None:
         super().__init__()
         self.patterns = patterns
         self.strict = strict

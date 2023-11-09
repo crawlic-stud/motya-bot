@@ -1,6 +1,6 @@
 import random
 from pathlib import Path
-from typing import List
+
 
 from aiogram import types
 from data.anekdots import ANEKDOTS_FOLDER
@@ -10,7 +10,7 @@ from .chat_history import CHAT_HISTORY_PATH, get_text_from_txt
 from .markov import generate_sentence, generate_sentence_with_start
 
 
-def _get_anekdots_paths() -> List[Text]:
+def _get_anekdots_paths() -> list[Text]:
     paths = []
     for path in ANEKDOTS_FOLDER.glob("*txt"):
         if path.name.startswith("anekdots"):
@@ -27,7 +27,7 @@ def _get_chat_history(chat_id: int) -> str:
     return text
 
 
-async def _get_text(messages: List[str]) -> str:
+async def _get_text(messages: list[str]) -> str:
     if not messages:
         return ""
     await types.ChatActions.typing()
@@ -35,13 +35,13 @@ async def _get_text(messages: List[str]) -> str:
     return text
 
 
-async def random_sentence_from_messages(messages: List[str]) -> str:
+async def random_sentence_from_messages(messages: list[str]) -> str:
     text = await _get_text(messages)
     sentence = generate_sentence(text)
     return sentence.lower()
 
 
-async def random_sentence(messages: List[str], chat_id: int) -> str:
+async def random_sentence(messages: list[str], chat_id: int) -> str:
     chat_history = _get_chat_history(chat_id)
     text = await _get_text(messages)
     sentence = generate_sentence(text + chat_history)
@@ -49,7 +49,7 @@ async def random_sentence(messages: List[str], chat_id: int) -> str:
 
 
 async def random_sentence_with_start(
-    starts: List[str], messages: List[str], chat_id: int
+    starts: list[str], messages: list[str], chat_id: int
 ) -> str:
     chat_history = _get_chat_history(chat_id)
     text = await _get_text(messages)

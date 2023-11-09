@@ -20,9 +20,9 @@ def feed_copypastas_to_bot():
         try:
             req = requests.get(f"https://copypastas.ru/copypasta/{i}/")
             soup = BeautifulSoup(req.text, "html.parser")
-            element = soup.find("h2", string="Текст копипасты")
-            parent = element.parent
-            pasta = parent.select("div > div")[0].text
+            element = soup.find("h2", string="Текст копипасты")  # type: ignore
+            parent = element.parent  # type: ignore
+            pasta = parent.select("div > div")[0].text  # type: ignore
             print(pasta)
             print("-" * 50)
             pastas += list(map(str.strip, pasta.split(".")))

@@ -1,5 +1,3 @@
-from typing import List
-
 from aiogram import types
 from aiogram.dispatcher.filters import Filter
 
@@ -8,7 +6,7 @@ COMMAND_PREFIX = "мотя"
 
 
 class MotyaCommand(Filter):
-    def __init__(self, commands: List[str], strict: bool = False) -> None:
+    def __init__(self, commands: list[str], strict: bool = False) -> None:
         super().__init__()
         self.commands = commands
         self.strict = strict
@@ -31,7 +29,7 @@ class MotyaCommand(Filter):
 
 
 class MotyaQuestion(MotyaCommand):
-    def __init__(self, commands: List[str], strict: bool = False) -> None:
+    def __init__(self, commands: list[str], strict: bool = False) -> None:
         super().__init__(commands, strict)
 
     async def check(self, message: types.Message) -> bool:

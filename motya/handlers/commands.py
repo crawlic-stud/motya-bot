@@ -25,12 +25,17 @@ async def send_pasta(message: types.Message):
     await message.reply(sentence)
 
 
+@dp.message_handler(MotyaCommand(["ссора", "время"]))
+async def get_time_since_last_argument(message: types.Message):
+    arg_time = db.get_days_since_last_argument(message.chat.id)
+    await message.reply(f"с прошлой ссоры прошло {arg_time}")
+
+
 @dp.message_handler(MotyaCommand([""]))
 async def send_random_message(message: types.Message):
     messages = db.get_messages_from_chat(message.chat.id)
     sentence = await random_sentence(messages, message.chat.id)
     if not sentence:
-        # await message.answer("я еще недостаточно у вас научился :(")
         return
     await message.answer(sentence)
 

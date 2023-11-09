@@ -16,13 +16,13 @@ TG_TOKEN = PROD_TOKEN
 
 logging.basicConfig(level=logging.INFO)
 
-motya = Bot(TG_TOKEN, parse_mode="HTML")
+motya = Bot(TG_TOKEN, parse_mode="HTML")  # type: ignore
 dp = Dispatcher(bot=motya, storage=MemoryStorage())
 
 # dict to temporary store messages
 messages_data = {}
 chat_offset = {}
-db = Database(MONGO_URL, "motya")
+db = Database(MONGO_URL, "motya")  # type: ignore
 
 # middleware for saving messages to DB
 dp.setup_middleware(MessageSaver(messages_data, db))

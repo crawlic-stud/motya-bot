@@ -1,5 +1,3 @@
-from typing import List
-
 from aiogram import Bot, types
 from aiogram.dispatcher.filters import Filter
 
