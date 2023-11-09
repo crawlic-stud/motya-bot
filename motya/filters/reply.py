@@ -1,7 +1,7 @@
 from typing import List
 
+from aiogram import Bot, types
 from aiogram.dispatcher.filters import Filter
-from aiogram import types, Bot
 
 
 class Reply(Filter):

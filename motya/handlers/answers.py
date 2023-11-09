@@ -1,8 +1,6 @@
 from aiogram import types
-
-from config import dp, db
+from config import db, dp
 from filters.motya_command import MotyaCommand
-
 from utils.message_manager import random_sentence_with_start
 
 

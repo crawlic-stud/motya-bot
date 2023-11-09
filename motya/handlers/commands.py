@@ -1,12 +1,11 @@
 from aiogram import types
-
-from config import dp, db, motya
+from config import db, dp, motya
 from filters.motya_command import MotyaCommand
 from filters.reply import Reply
 from utils.message_manager import (
+    random_anekdot,
     random_sentence,
     random_sentence_from_messages,
-    random_anekdot,
 )
 
 

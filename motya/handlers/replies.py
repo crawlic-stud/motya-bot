@@ -1,10 +1,9 @@
 import random
 
 from aiogram import types
-
 from config import dp
 from filters.motya_command import MotyaCommand
-from utils.tools import words_after, roll_chance
+from utils.tools import roll_chance, words_after
 
 
 @dp.message_handler(MotyaCommand(["прив", "дарова", "дороу", "ку"]))

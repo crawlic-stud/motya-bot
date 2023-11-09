@@ -1,6 +1,5 @@
 from aiogram import executor
 
-
 if __name__ == "__main__":
     from utils.environment import check_environment
 

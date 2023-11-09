@@ -2,11 +2,9 @@ import logging
 
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
-
-from utils.database import Database
 from filters.motya_command import COMMAND_PREFIX
 from models import MessageData
-
+from utils.database import Database
 
 STORE_LIMIT = 5
 logger = logging.getLogger("messages")

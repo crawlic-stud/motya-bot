@@ -1,14 +1,12 @@
-import os
 import logging
+import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from dotenv import load_dotenv
-
-from utils.database import Database
 from middlewares.message_saver import MessageSaver
 from middlewares.random_sender import RandomSender
-
+from utils.database import Database
 
 load_dotenv()
 MONGO_URL = os.getenv("MONGO_URL")

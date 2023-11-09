@@ -1,13 +1,13 @@
-from typing import List
-from pathlib import Path
 import random
+from pathlib import Path
+from typing import List
 
 from aiogram import types
+from data.anekdots import ANEKDOTS_FOLDER
 from markovify import Text
 
-from .chat_history import get_text_from_txt, CHAT_HISTORY_PATH
+from .chat_history import CHAT_HISTORY_PATH, get_text_from_txt
 from .markov import generate_sentence, generate_sentence_with_start
-from data.anekdots import ANEKDOTS_FOLDER
 
 
 def _get_anekdots_paths() -> List[Text]:

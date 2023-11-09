@@ -1,12 +1,11 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 from aiogram import types
 from aiogram.utils.exceptions import FileIsTooBig
-
 from config import dp
 from filters.file import FileFilter
-from utils.chat_history import get_texts_from_json, save_texts_to_txt, CHAT_HISTORY_PATH
+from utils.chat_history import CHAT_HISTORY_PATH, get_texts_from_json, save_texts_to_txt
 
 
 @dp.message_handler(FileFilter(".json"), content_types=[types.ContentType.DOCUMENT])

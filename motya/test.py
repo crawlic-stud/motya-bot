@@ -1,7 +1,5 @@
-from markovify import NewlineText, Text
-
 from data.anekdots import combine_all_anekdots
-
+from markovify import NewlineText, Text
 
 if __name__ == "__main__":
     path = combine_all_anekdots()

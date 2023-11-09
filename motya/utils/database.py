@@ -1,7 +1,6 @@
-from typing import List, Any
+from typing import Any, List
 
 import pymongo
-
 from models import MessageData
 
 

@@ -1,7 +1,7 @@
 from typing import List
 
-from aiogram.dispatcher.filters import Filter
 from aiogram import types
+from aiogram.dispatcher.filters import Filter
 
 
 class Reaction(Filter):

@@ -1,11 +1,9 @@
 import random
 
 from aiogram import types
-
 from config import dp
 from filters.reaction import Reaction
 from utils.tools import roll_chance
-
 
 LAUGH_CHANCE = 10 / 100
 

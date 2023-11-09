@@ -1,9 +1,8 @@
 from aiogram import types
-from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
-
-from filters.motya_command import MotyaCommand
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from config import dp
+from filters.motya_command import MotyaCommand
 from utils.games import HangmanGame, WordleGame, get_word
 
 

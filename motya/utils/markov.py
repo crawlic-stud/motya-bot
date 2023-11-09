@@ -2,7 +2,6 @@ from typing import Union
 
 from markovify import NewlineText
 
-
 MAX_TRIES = 1000
 MAX_WORDS = 150
 

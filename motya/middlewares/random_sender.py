@@ -1,12 +1,11 @@
-import logging
 import asyncio
+import logging
 
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
-
 from utils.database import Database
-from utils.tools import roll_chance
 from utils.message_manager import random_sentence
+from utils.tools import roll_chance
 
 # TODO: fetch probability from database and store it somewhere
 PROBABILITY = 5 / 100

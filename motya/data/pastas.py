@@ -1,7 +1,7 @@
 import time
+
 import requests
 from bs4 import BeautifulSoup
-
 from config import db, motya
 from models import MessageData
 

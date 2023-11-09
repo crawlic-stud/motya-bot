@@ -1,11 +1,10 @@
-from typing import Dict
-from pathlib import Path
-import time
 import os
+import time
+from pathlib import Path
+from typing import Dict
 
 import requests
 from bs4 import BeautifulSoup
-
 
 ANEKDOTS_FOLDER = Path.cwd() / "motya" / "files" / "anekdots"
 

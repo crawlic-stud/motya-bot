@@ -1,6 +1,6 @@
-from pathlib import Path
 import random
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from config import db
 
