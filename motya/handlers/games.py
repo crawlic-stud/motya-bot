@@ -55,7 +55,7 @@ async def run_hangman_game(message: types.Message, state: FSMContext):
         if game.lost:
             await state.finish()
             await message.answer(
-                "вы проиграли \('o')/\nчтоб сыграть еще раз напишите: <i>мотя игра</i> или <i>мотя виселица</i>"
+                "вы проиграли \\('o')/\nчтоб сыграть еще раз напишите: <i>мотя игра</i> или <i>мотя виселица</i>"
             )
         elif game.won:
             await state.finish()
