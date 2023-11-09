@@ -4,8 +4,8 @@ from config import dp, db, motya
 from filters.motya_command import MotyaCommand
 from filters.reply import Reply
 from utils.message_manager import (
-    random_sentence, 
-    random_sentence_from_messages, 
+    random_sentence,
+    random_sentence_from_messages,
     random_anekdot,
 )
 

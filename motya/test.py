@@ -10,4 +10,3 @@ if __name__ == "__main__":
     for _ in range(25):
         print(model.make_sentence())
         print("-" * 50)
-        

@@ -18,7 +18,7 @@ def check_environment() -> bool:
         is_test = ""
 
     is_test = is_test == "test"
-    
+
     if is_test:
         change_token("TEST_TOKEN")
     else:

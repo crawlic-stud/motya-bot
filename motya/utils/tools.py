@@ -2,7 +2,7 @@ import random
 
 
 def words_after(message: str, word: str) -> str:
-    words = message.split(' ')
+    words = message.split(" ")
     word_index = words.index(word) + 1
     return " ".join(words[word_index:])
 

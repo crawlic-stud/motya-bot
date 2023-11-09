@@ -13,6 +13,7 @@ def _catch_empty_chain(func):
             return func(text, *args, **kwargs)
         except KeyError:
             return ""
+
     return wrapper
 
 
@@ -51,7 +52,6 @@ def generate_sentence(text: str) -> str:
 def generate_sentence_with_start(text, keyword):
     text_model = NewlineText(input_text=text, well_formed=False)
     sentence = text_model.make_sentence_with_start(
-        beginning=keyword,
-        strict=False,
-        tries=MAX_TRIES)
+        beginning=keyword, strict=False, tries=MAX_TRIES
+    )
     return sentence or ""

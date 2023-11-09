@@ -4,11 +4,7 @@ from aiogram.dispatcher import FSMContext
 
 from filters.motya_command import MotyaCommand
 from config import dp
-from utils.games import (
-    HangmanGame,
-    WordleGame,
-    get_word
-)
+from utils.games import HangmanGame, WordleGame, get_word
 
 
 class GameState(StatesGroup):
@@ -27,7 +23,9 @@ async def cancel_game(message: types.Message, state: FSMContext):
 
 @dp.message_handler(MotyaCommand(["виселица", "игра"], strict=True), state="*")
 async def start_hangman_game(message: types.Message, state: FSMContext):
-    await message.reply("поиграем в виселицу! чтобы закончить, скажи: <i>мотя отмена</i> или <i>мотя стоп</i>")
+    await message.reply(
+        "поиграем в виселицу! чтобы закончить, скажи: <i>мотя отмена</i> или <i>мотя стоп</i>"
+    )
     async with state.proxy() as data:
         word = get_word(message.chat.id, 10)
         data["game"] = HangmanGame(word.lower())
@@ -57,15 +55,21 @@ async def run_hangman_game(message: types.Message, state: FSMContext):
 
         if game.lost:
             await state.finish()
-            await message.answer("вы проиграли \('o')/\nчтоб сыграть еще раз напишите: <i>мотя игра</i> или <i>мотя виселица</i>")
+            await message.answer(
+                "вы проиграли \('o')/\nчтоб сыграть еще раз напишите: <i>мотя игра</i> или <i>мотя виселица</i>"
+            )
         elif game.won:
             await state.finish()
-            await message.answer("вы победили !!!!!!\nчтоб сыграть еще раз напишите: <i>мотя игра</i> или <i>мотя виселица</i>")
+            await message.answer(
+                "вы победили !!!!!!\nчтоб сыграть еще раз напишите: <i>мотя игра</i> или <i>мотя виселица</i>"
+            )
 
 
-@dp.message_handler(MotyaCommand(["вордл"], strict=True), state="*")
+@dp.message_handler(MotyaCommand(["вордл", "wordle"], strict=True), state="*")
 async def start_wordle_game(message: types.Message, state: FSMContext):
-    await message.reply("поиграем в wordle! чтобы закончить, скажи: <i>мотя отмена</i> или <i>мотя стоп</i>")
+    await message.reply(
+        "поиграем в wordle! чтобы закончить, скажи: <i>мотя отмена</i> или <i>мотя стоп</i>"
+    )
     async with state.proxy() as data:
         word = get_word(message.chat.id, 6)
         data["game"] = WordleGame(word.lower())
@@ -90,4 +94,6 @@ async def run_wordle_game(message: types.Message, state: FSMContext):
 
         elif game.lost:
             await state.finish()
-            await message.answer(f"вы проиграли, правильно было: {game.word.upper()}\nчтоб сыграть еще раз напишите: <i>мотя вордл</i>")
+            await message.answer(
+                f"вы проиграли, правильно было: {game.word.upper()}\nчтоб сыграть еще раз напишите: <i>мотя вордл</i>"
+            )

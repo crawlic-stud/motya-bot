@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-ANEKDOTS_FOLDER = Path.cwd() / "motya" / "files" / "anekdots" 
+ANEKDOTS_FOLDER = Path.cwd() / "motya" / "files" / "anekdots"
 
 
 def get_tags_links() -> Dict[str, str]:
@@ -31,7 +31,7 @@ def get_page_text(base_url: str, page_number: int) -> str:
     for response in req.history:
         if response.status_code == 302:
             return ""
-    return req.text     
+    return req.text
 
 
 def save_all_anekdots() -> None:
@@ -41,28 +41,28 @@ def save_all_anekdots() -> None:
     for tag_name, tag_url in tags_links.items():
         page = 1
         anekdots_by_tag = []
-        html = get_page_text(tag_url, page) 
-        
+        html = get_page_text(tag_url, page)
+
         if list(ANEKDOTS_FOLDER.glob(f"{tag_name}*")):
             print("Already exist:", tag_name)
             continue
-        
+
         while html:
             print(f"Parsing {tag_name=}, {page=}")
             html = get_page_text(tag_url, page)
             soup = BeautifulSoup(html, "html.parser")
-            
+
             elements = soup.select(".topicbox .text")
             anekdots_this_page = [elem.text for elem in elements]
             anekdots_by_tag += anekdots_this_page
             page += 1
             time.sleep(0.05)
-        
-        print("-"*50)    
+
+        print("-" * 50)
         path = ANEKDOTS_FOLDER / f"{tag_name}.txt"
         path.write_text("\n".join(anekdots_by_tag), encoding="utf-8")
-        print(f"Saved anekdots with {tag_name=}, last_page={page}")    
-        print("-"*50)    
+        print(f"Saved anekdots with {tag_name=}, last_page={page}")
+        print("-" * 50)
 
 
 def combine_all_anekdots() -> Path:
@@ -75,4 +75,3 @@ def combine_all_anekdots() -> Path:
             anekdots = list(map(str.strip, anekdots))
             f.write("\n".join(anekdots) + "\n")
     return all_path
-    
