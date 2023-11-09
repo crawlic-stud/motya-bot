@@ -25,6 +25,6 @@ async def update_arguments_count(message: types.Message):
     arg_time = db.get_days_since_last_argument(message.chat.id)
     db.insert_new_argument(message.chat.id)
     await message.reply(
-        "зафиксировал ссору. ну и дураки вы."
+        "зафиксировал ссору. ну и дураки вы. "
         + f"с прошлой ссоры прошло всего лишь {arg_time}"
     )
