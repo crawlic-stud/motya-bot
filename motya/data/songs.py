@@ -100,6 +100,8 @@ async def get_song_lyrics(songs: list[Song]) -> AsyncIterator[SongWithLyrics]:
 
 
 async def get_existing_songs(artist_name: str) -> tuple[Artist | None, list[str]]:
+    if not artist_name:
+        return None, songs_db.get_all_songs()
     artist = await get_artist_data(artist_name)
     existing_songs = []
     if artist is not None:

@@ -64,3 +64,6 @@ class SongsDb(Database):
     def add_songs(self, artist: str, songs_lyrics: list[str]) -> None:
         songs_objs = [{"artist": artist, "lyrics": song} for song in songs_lyrics]
         self.collection.insert_many(songs_objs)
+
+    def get_all_songs(self):
+        return [song["lyrics"] for song in self.collection.find()]
