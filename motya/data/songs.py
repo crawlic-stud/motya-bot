@@ -1,10 +1,11 @@
 import asyncio
-from ctypes.wintypes import LPBYTE
 from typing import AsyncIterator
 
 import aiohttp
 from pydantic import BaseModel
 from bs4 import BeautifulSoup
+
+from config import songs_db
 
 
 BASE_URL = "https://genius.com/api"
@@ -35,13 +36,15 @@ async def get_artist_data(artist: str) -> Artist | None:
             if not response.ok:
                 return
             data = await response.json(encoding="utf-8")
-    sections = data["response"]["sections"]
-
     result = {}
-    for section in sections:
-        if section["type"] == "artist":
-            result = section["hits"][0]["result"]
-            break
+    try:
+        sections = data["response"]["sections"]
+        for section in sections:
+            if section["type"] == "artist":
+                result = section["hits"][0]["result"]
+                break
+    except (IndexError, KeyError):
+        return
 
     return Artist(**result)
 
@@ -96,15 +99,30 @@ async def get_song_lyrics(songs: list[Song]) -> AsyncIterator[SongWithLyrics]:
                 yield SongWithLyrics(song_id=song_id, lyrics=parsed_lyrics)
 
 
-async def main():
-    artist = await get_artist_data("noize mc")
+async def get_existing_songs(artist_name: str) -> tuple[Artist | None, list[str]]:
+    artist = await get_artist_data(artist_name)
+    existing_songs = []
+    if artist is not None:
+        existing_songs = songs_db.get_songs(artist.api_path)
+    return artist, existing_songs
+
+
+async def get_songs_and_save_to_db(artist: Artist | None) -> list[str]:
+    lyrics = []
     if artist is not None:
         songs = await get_artist_songs(artist.api_path)
-        lyrics = []
         async for song in get_song_lyrics(songs):
-            lyrics.append(song)
-            print(song.lyrics)
-    return
+            lyrics.append(song.lyrics)
+        songs_db.add_songs(artist.api_path, lyrics)
+    return lyrics
+
+
+async def main():
+    artist, songs = await get_existing_songs("noize mc")
+    if not songs:
+        songs = await get_songs_and_save_to_db(artist)
+    for song in songs:
+        print(song)
 
 
 if __name__ == "__main__":

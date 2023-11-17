@@ -10,7 +10,7 @@ from .chat_history import CHAT_HISTORY_PATH, get_text_from_txt
 from .markov import generate_sentence, generate_sentence_with_start
 
 
-def _get_anekdots_paths() -> list[Text]:
+def _get_anekdots_paths() -> list[Path]:
     paths = []
     for path in ANEKDOTS_FOLDER.glob("*txt"):
         if path.name.startswith("anekdots"):

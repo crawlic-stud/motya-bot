@@ -3,7 +3,7 @@ import logging
 
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
-from utils.database import Database
+from utils.database import CommonDb
 from utils.message_manager import random_sentence
 from utils.tools import roll_chance
 
@@ -13,7 +13,7 @@ logger = logging.getLogger("sender")
 
 
 class RandomSender(BaseMiddleware):
-    def __init__(self, database: Database):
+    def __init__(self, database: CommonDb):
         super().__init__()
         self.database = database
 

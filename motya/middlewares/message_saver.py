@@ -4,14 +4,14 @@ from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from filters.motya_command import COMMAND_PREFIX
 from models import MessageData
-from utils.database import Database
+from utils.database import CommonDb
 
 STORE_LIMIT = 5
 logger = logging.getLogger("messages")
 
 
 class MessageSaver(BaseMiddleware):
-    def __init__(self, data: dict, database: Database):
+    def __init__(self, data: dict, database: CommonDb):
         super().__init__()
         self.data = data
         self.database = database

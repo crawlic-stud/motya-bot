@@ -1,12 +1,12 @@
 from aiogram import types
-from config import db, dp
+from config import common_db, dp
 from filters.motya_command import MotyaCommand
 from utils.message_manager import random_sentence_with_start
 
 
 def answer_starts_with(starts):
     async def handler(message: types.Message):
-        messages = db.get_messages_from_chat(message.chat.id)
+        messages = common_db.get_messages_from_chat(message.chat.id)
         sentence = await random_sentence_with_start(starts, messages, message.chat.id)
         await message.reply(sentence) if sentence else None
 

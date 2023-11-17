@@ -2,7 +2,7 @@ import random
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from config import db
+from config import common_db
 
 PICS = (Path.cwd() / "motya/sprites.txt").read_text().split(";")
 
@@ -79,7 +79,7 @@ def messages_to_words(
 
 
 def get_word(chat_id: int, max_length: int):
-    all_messages = db.get_messages_from_chat(chat_id)
+    all_messages = common_db.get_messages_from_chat(chat_id)
     words = messages_to_words(all_messages, max_length) or ["писька"]
     word = random.choice(words)
     return word

@@ -5,7 +5,7 @@ import pymongo
 from models import MessageData, ArgumentTimeElapsed
 
 
-class Database:
+class CommonDb:
     def __init__(self, url: str, db_name: str) -> None:
         self.db = pymongo.MongoClient(url)[db_name]
 
@@ -22,19 +22,30 @@ class Database:
     def get_messages_from_chat(self, chat_id: int) -> list[str]:
         return [message["text"] for message in self._get_messages(chat_id)]
 
-    def get_pastas(self) -> list[str]:
-        return [pasta["text"] for pasta in self.db["pastas"].find()]
 
+class Database(CommonDb):
+    def __init__(self, url: str, db_name: str, collection_name: str) -> None:
+        super().__init__(url, db_name)
+        self.collection = self.db[collection_name]
+
+
+class PastasDb(Database):
+    def get_pastas(self) -> list[str]:
+        return [pasta["text"] for pasta in self.collection.find()]
+
+    def insert_pastas(self, pastas: list[dict[str, Any]]):
+        self.collection.insert_many(pastas)
+
+
+class ArgumentsDb(Database):
     def get_days_since_last_argument(self, chat_id: int) -> ArgumentTimeElapsed:
-        collection = self.db["arguments"]
-        arg_obj = collection.find_one({"chat_id": chat_id}, {"date": 1}) or {}
+        arg_obj = self.collection.find_one({"chat_id": chat_id}, {"date": 1}) or {}
         date: datetime = arg_obj.get("date", datetime.now())
         delta = datetime.now() - date
         return ArgumentTimeElapsed.from_timedelta(delta)
 
     def insert_new_argument(self, chat_id: int) -> None:
-        collection = self.db["arguments"]
-        collection.update_one(
+        self.collection.update_one(
             {"chat_id": chat_id},
             {
                 "$set": {
@@ -44,3 +55,12 @@ class Database:
             },
             upsert=True,
         )
+
+
+class SongsDb(Database):
+    def get_songs(self, artist: str) -> list[str]:
+        return [song["lyrics"] for song in self.collection.find({"artist": artist})]
+
+    def add_songs(self, artist: str, songs_lyrics: list[str]) -> None:
+        songs_objs = [{"artist": artist, "lyrics": song} for song in songs_lyrics]
+        self.collection.insert_many(songs_objs)
