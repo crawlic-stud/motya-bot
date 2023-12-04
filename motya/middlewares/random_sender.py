@@ -4,7 +4,7 @@ import logging
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from utils.database import CommonDb
-from utils.message_manager import random_sentence
+from utils.message_manager import answer_with_kb, random_sentence
 from utils.tools import roll_chance
 
 # TODO: fetch probability from database and store it somewhere
@@ -30,7 +30,7 @@ class RandomSender(BaseMiddleware):
             messages = self.database.get_messages_from_chat(chat_id)
             sentence = await random_sentence(messages, chat_id)
             if sentence:
-                await message.answer(sentence)
+                await answer_with_kb(message, sentence)
                 logger.info(f"Sent random message to chat {chat_id}")
 
         asyncio.create_task(task())

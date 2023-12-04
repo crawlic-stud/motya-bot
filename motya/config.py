@@ -1,4 +1,3 @@
-from functools import partial
 import logging
 import os
 
@@ -7,11 +6,12 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from dotenv import load_dotenv
 from middlewares.message_saver import MessageSaver
 from middlewares.random_sender import RandomSender
-from utils.database import ArgumentsDb, Database, CommonDb, PastasDb, SongsDb
+from utils.database import ArgumentsDb, CommonDb, PastasDb, SongsDb
 
 load_dotenv()
 MONGO_URL = os.getenv("MONGO_URL")
 PROD_TOKEN = os.getenv("TG_TOKEN")
+ADMIN_ID = int(os.getenv("ADMIN_ID"))  # type: ignore
 
 TG_TOKEN = PROD_TOKEN
 
