@@ -23,7 +23,7 @@ downloading_songs = set()
 @dp.message_handler(MotyaCommand(["нарисуй", "рисунок"], strict=True))
 async def send_photo(message: types.Message):
     tmp = await message.reply("рисую, подожди немного друг")
-    prompt = words_after(message.text, "мотя")
+    prompt = words_after(message.text.lower(), "мотя")
     await reply_with_image(message, prompt)
     await tmp.delete()
 
