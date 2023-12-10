@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from middlewares.message_saver import MessageSaver
 from middlewares.random_sender import RandomSender
 from utils.database import ArgumentsDb, CommonDb, PastasDb, SongsDb
+from utils.image_api import Text2ImageAPI
 
 load_dotenv()
 MONGO_URL = os.getenv("MONGO_URL")
@@ -23,6 +24,11 @@ dp = Dispatcher(bot=motya, storage=MemoryStorage())
 # dict to temporary store messages
 messages_data = {}
 chat_offset = {}
+
+# image API
+API_KEY = os.getenv("FUSION_API_KEY")
+SECRET_KEY = os.getenv("FUSION_SECRET_KEY")
+image_api = Text2ImageAPI("https://api-key.fusionbrain.ai/", API_KEY, SECRET_KEY)
 
 DB_NAME = "motya"
 common_db = CommonDb(MONGO_URL, DB_NAME)  # type: ignore

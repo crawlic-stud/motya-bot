@@ -1,6 +1,6 @@
+import io
 import random
 from pathlib import Path
-
 
 from aiogram import types
 from data.anekdots import ANEKDOTS_FOLDER

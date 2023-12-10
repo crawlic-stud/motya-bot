@@ -1,11 +1,13 @@
 from aiogram import types
+from requests import delete
 
 from config import pastas_db, arguments_db, common_db, dp, motya
 from filters.motya_command import MotyaCommand
 from filters.reply import Reply
-from data.songs import get_existing_songs, get_songs_and_save_to_db
-from utils.markov import generate_sentence
 from utils.tools import words_after
+from utils.markov import generate_sentence
+from utils.songs import get_songs
+from utils.image_generate import reply_with_image
 from utils.message_manager import (
     answer_with_kb,
     random_anekdot,
@@ -16,6 +18,14 @@ from utils.message_manager import (
 
 
 downloading_songs = set()
+
+
+@dp.message_handler(MotyaCommand(["нарисуй", "рисунок"], strict=True))
+async def send_photo(message: types.Message):
+    tmp = await message.reply("рисую, подожди немного друг")
+    prompt = words_after(message.text, "мотя")
+    await reply_with_image(message, prompt)
+    await tmp.delete()
 
 
 @dp.message_handler(MotyaCommand(["анекдот", "анек"], strict=True))
@@ -40,26 +50,6 @@ async def send_pasta(message: types.Message):
 async def get_time_since_last_argument(message: types.Message):
     arg_time = arguments_db.get_days_since_last_argument(message.chat.id)
     await message.reply(f"с прошлой ссоры прошло {arg_time}")
-
-
-async def get_songs(message: types.Message, command: str):
-    artist_name = words_after(message.text, command)
-    artist, songs = await get_existing_songs(artist_name)
-    if not artist:
-        await message.reply("не нашел такого артиста...")
-        return
-    artist_id = artist.api_path
-    if artist_id in downloading_songs:
-        await message.reply("все еще читаю, ожидайте!!!")
-        return
-    # return
-    if not songs:
-        downloading_songs.add(artist_id)
-        msg = await message.reply(f"читаю песни {artist.name}, ожидайте!")
-        songs = await get_songs_and_save_to_db(artist)
-        await msg.delete()
-        downloading_songs.remove(artist_id)
-    return songs
 
 
 @dp.message_handler(MotyaCommand(["строчка"]))

@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import json
 import logging
 import os
@@ -54,6 +55,7 @@ class Text2ImageAPI:
                 data = await response.json()
 
             if data["status"] == "DONE":
+                logger.info("DONE")
                 return data["images"]
 
             attempts -= 1
@@ -70,7 +72,13 @@ class Text2ImageAPI:
         )
         return form_data
 
-    async def generate_images(
+    @staticmethod
+    def _decode_base64(base64_string: str) -> bytes:
+        base64_img_bytes = base64_string.encode("utf-8")
+        decoded_image_data = base64.b64decode(base64_img_bytes)
+        return decoded_image_data
+
+    async def generate_image(
         self,
         prompt: str,
         images_count: int = 1,
@@ -89,7 +97,8 @@ class Text2ImageAPI:
             form_data = self._create_form_data(params, model_id)
             uuid = await self._start_generate(session, form_data)
             images = await self._check_generation(session, uuid)
-        return images
+        if images:
+            return self._decode_base64(images[0])
 
 
 if __name__ == "__main__":
@@ -98,5 +107,9 @@ if __name__ == "__main__":
     API_KEY = os.getenv("FUSION_API_KEY")
     SECRET_KEY = os.getenv("FUSION_SECRET_KEY")
     api = Text2ImageAPI("https://api-key.fusionbrain.ai/", API_KEY, SECRET_KEY)
-    images = asyncio.run(api.generate_images("house of blood"))
-    print(images[0])
+    image = asyncio.run(api.generate_image("утка червь зелень"))
+    if image:
+        with open("test.png", "wb") as f:
+            f.write(image)
+    else:
+        print("no image")
