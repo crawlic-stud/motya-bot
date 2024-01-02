@@ -1,4 +1,5 @@
 from aiogram import types, F, Router
+from aiogram.exceptions import TelegramBadRequest
 
 from config import ADMIN_ID, motya, ADMIN_ID
 from .query_data import RATE_DATA, LIKE_DATA, DISLIKE_DATA
@@ -20,11 +21,14 @@ APPROVE_KEYBOARD = types.InlineKeyboardMarkup(
 
 @router.message_reaction()
 async def handle_rate(message: types.MessageReactionUpdated):
-    msg = await motya.forward_message(ADMIN_ID, message.chat.id, message.message_id)
-    msg_text = msg.text if msg.text else ""
+    try:
+        msg = await motya.forward_message(ADMIN_ID, message.chat.id, message.message_id)
+    except TelegramBadRequest:
+        return
+
+    msg_text = msg.text if msg.text else "empty"
     await msg.delete()
     await motya.send_message(ADMIN_ID, msg_text, reply_markup=APPROVE_KEYBOARD)
-    ...
 
 
 @router.callback_query(F.data == LIKE_DATA)
