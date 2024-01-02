@@ -77,8 +77,10 @@ async def random_anekdot(state_size=3) -> str:
 
 
 async def reply_with_kb(message: types.Message, text: str):
-    return await message.reply(text, reply_markup=RATE_KEYBOARD)
+    return await message.reply(text)
+    # return await message.reply(text, reply_markup=RATE_KEYBOARD)
 
 
 async def answer_with_kb(message: types.Message, text: str):
-    return await message.answer(text, reply_markup=RATE_KEYBOARD)
+    return await message.answer(text)
+    # return await message.answer(text, reply_markup=RATE_KEYBOARD)

@@ -1,6 +1,6 @@
 from aiogram import types, F, Router
 
-from config import ADMIN_ID, motya
+from config import ADMIN_ID, motya, ADMIN_ID
 from .query_data import RATE_DATA, LIKE_DATA, DISLIKE_DATA
 
 
@@ -18,12 +18,13 @@ APPROVE_KEYBOARD = types.InlineKeyboardMarkup(
 )
 
 
-@router.callback_query(F.data == RATE_DATA)
-async def handle_rate(query: types.CallbackQuery):
-    if isinstance(query.message, types.Message):
-        await query.message.delete_reply_markup()
-        txt = query.message.text or ""
-        await motya.send_message(ADMIN_ID, txt, reply_markup=APPROVE_KEYBOARD)
+@router.message_reaction()
+async def handle_rate(message: types.MessageReactionUpdated):
+    msg = await motya.forward_message(ADMIN_ID, message.chat.id, message.message_id)
+    msg_text = msg.text if msg.text else ""
+    await msg.delete()
+    await motya.send_message(ADMIN_ID, msg_text, reply_markup=APPROVE_KEYBOARD)
+    ...
 
 
 @router.callback_query(F.data == LIKE_DATA)
