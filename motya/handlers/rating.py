@@ -41,8 +41,10 @@ async def handle_rate(message: types.MessageReactionUpdated):
 
     msg_text = msg.text if msg.text else "empty"
     await msg.delete()
-    await motya.send_message(ADMIN_ID, msg_text, reply_markup=APPROVE_KEYBOARD)
-    rating_db.add_to_rating(unique_id)
+    user_id = msg.forward_from.id if msg.forward_from else 0
+    if user_id == motya.id:
+        await motya.send_message(ADMIN_ID, msg_text, reply_markup=APPROVE_KEYBOARD)
+        rating_db.add_to_rating(unique_id)
 
 
 @router.callback_query(F.data == LIKE_DATA)
