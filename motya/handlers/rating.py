@@ -1,31 +1,40 @@
-from aiogram import types
+from aiogram import types, F, Router
 
-from config import dp, ADMIN_ID, motya
+from config import ADMIN_ID, motya
 from .query_data import RATE_DATA, LIKE_DATA, DISLIKE_DATA
 
 
+router = Router(name="rating")
+
+
 GROUP_NAME = "@motya_skazal"
-APPROVE_KEYBOARD = types.InlineKeyboardMarkup(2).add(
-    types.InlineKeyboardButton("✅", callback_data=LIKE_DATA),  # type: ignore
-    types.InlineKeyboardButton("🚫", callback_data=DISLIKE_DATA),  # type: ignore
+APPROVE_KEYBOARD = types.InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            types.InlineKeyboardButton(text="✅", callback_data=LIKE_DATA),
+            types.InlineKeyboardButton(text="🚫", callback_data=DISLIKE_DATA),
+        ]
+    ],
 )
 
 
-@dp.callback_query_handler(lambda c: c.data == RATE_DATA)
+@router.callback_query(F.data == RATE_DATA)
 async def handle_rate(query: types.CallbackQuery):
-    await query.message.delete_reply_markup()
-    await motya.send_message(
-        ADMIN_ID, query.message.text, reply_markup=APPROVE_KEYBOARD
-    )
+    if isinstance(query.message, types.Message):
+        await query.message.delete_reply_markup()
+        txt = query.message.text or ""
+        await motya.send_message(ADMIN_ID, txt, reply_markup=APPROVE_KEYBOARD)
 
 
-@dp.callback_query_handler(lambda c: c.data == LIKE_DATA)
+@router.callback_query(F.data == LIKE_DATA)
 async def publish_to_group(query: types.CallbackQuery):
-    await motya.send_message(GROUP_NAME, query.message.text)
+    await motya.send_message(GROUP_NAME, query.message.text)  # type: ignore
     await query.answer(f"добавил в группу {GROUP_NAME}!")
-    await query.message.delete()
+    if isinstance(query.message, types.Message):
+        await query.message.delete()
 
 
-@dp.callback_query_handler(lambda c: c.data == DISLIKE_DATA)
+@router.callback_query(F.data == DISLIKE_DATA)
 async def discard_message(query: types.CallbackQuery):
-    await query.message.delete()
+    if isinstance(query.message, types.Message):
+        await query.message.delete()

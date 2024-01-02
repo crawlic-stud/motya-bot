@@ -15,7 +15,7 @@ async def reply_with_image(
     )
     image_bytes = await image_api.generate_image(motya_prompt)
     if image_bytes:
-        f = types.InputFile(io.BytesIO(image_bytes), filename="motyadraw.png")
+        f = types.BufferedInputFile(file=image_bytes, filename="motyadraw.png")
         await message.reply_photo(f, caption=caption)
     else:
         await message.reply("не получилось(")

@@ -2,7 +2,7 @@ import logging
 import os
 
 from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.fsm.storage.memory import MemoryStorage
 from dotenv import load_dotenv
 from middlewares.message_saver import MessageSaver
 from middlewares.random_sender import RandomSender
@@ -38,5 +38,5 @@ songs_db = SongsDb(MONGO_URL, DB_NAME, "songs")  # type: ignore
 
 
 # middleware for saving messages to DB
-dp.setup_middleware(MessageSaver(messages_data, common_db))
-dp.setup_middleware(RandomSender(common_db))
+dp.message.middleware(MessageSaver(messages_data, common_db))
+dp.message.middleware(RandomSender(common_db, motya))

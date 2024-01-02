@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.dispatcher.filters import Filter
+from aiogram.filters import Filter
 
 
 class Reaction(Filter):
@@ -8,8 +8,8 @@ class Reaction(Filter):
         self.patterns = patterns
         self.strict = strict
 
-    async def check(self, message: types.Message) -> bool:
-        msg = message.text.lower()
+    async def __call__(self, message: types.Message) -> bool:
+        msg = message.text.lower() if message.text else ""
 
         if self.strict:
             is_pattern = any(pattern in msg.split() for pattern in self.patterns)

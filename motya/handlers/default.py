@@ -1,7 +1,9 @@
-from aiogram import types
-from config import dp
+from aiogram import types, Router
 
 
-@dp.message_handler()
-async def save_message(message: types.Message):
+router = Router(name="default")
+
+
+@router.message()
+async def save_message(_: types.Message):
     pass

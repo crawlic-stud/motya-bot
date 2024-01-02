@@ -6,6 +6,7 @@ from typing import Dict
 import requests
 from bs4 import BeautifulSoup
 
+
 ANEKDOTS_FOLDER = Path.cwd() / "motya" / "files" / "anekdots"
 
 

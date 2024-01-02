@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.dispatcher.filters import Filter
+from aiogram.filters import Filter
 
 
 class FileFilter(Filter):
@@ -7,8 +7,8 @@ class FileFilter(Filter):
         super().__init__()
         self.extension = extension
 
-    async def check(self, message: types.Message) -> bool:
-        if not message.document or not message.document.file_name.endswith(
+    async def __call__(self, message: types.Message) -> bool:
+        if not message.document or not (message.document.file_name or "").endswith(
             self.extension
         ):
             return False

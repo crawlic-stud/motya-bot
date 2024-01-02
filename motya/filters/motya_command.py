@@ -1,18 +1,26 @@
+from distutils.sysconfig import PREFIX
 from aiogram import types
-from aiogram.dispatcher.filters import Filter
+from aiogram.filters import Filter
+
+from models import CommandInfo
 
 # almost all bot commands starts with this prefix
 COMMAND_PREFIX = "мотя"
+motya_commands: list[CommandInfo] = []
 
 
 class MotyaCommand(Filter):
-    def __init__(self, commands: list[str], strict: bool = False) -> None:
+    def __init__(
+        self, commands: list[str], description: str | None = None, strict: bool = False
+    ) -> None:
         super().__init__()
         self.commands = commands
         self.strict = strict
+        if description:
+            motya_commands.append(CommandInfo(COMMAND_PREFIX, commands, description))
 
-    async def check(self, message: types.Message) -> bool:
-        msg = message.text.lower()
+    async def __call__(self, message: types.Message) -> bool:
+        msg = message.text.lower() if message.text else ""
 
         is_prefixed = msg.startswith(COMMAND_PREFIX)
         if self.strict:
@@ -29,9 +37,11 @@ class MotyaCommand(Filter):
 
 
 class MotyaQuestion(MotyaCommand):
-    def __init__(self, commands: list[str], strict: bool = False) -> None:
-        super().__init__(commands, strict)
+    def __init__(
+        self, commands: list[str], description: str, strict: bool = False
+    ) -> None:
+        super().__init__(commands, description, strict)
 
-    async def check(self, message: types.Message) -> bool:
-        is_command = await super().check(message)
-        return is_command and message.text.endswith("?")
+    async def __call__(self, message: types.Message) -> bool:
+        is_command = await super().__call__(message)
+        return is_command and (message.text.endswith("?") if message.text else False)

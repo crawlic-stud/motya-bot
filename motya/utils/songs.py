@@ -8,7 +8,8 @@ downloading_songs = set()
 
 
 async def get_songs(message: types.Message, command: str):
-    artist_name = words_after(message.text, command)
+    msg_text = message.text if message.text else ""
+    artist_name = words_after(msg_text, command)
     artist, songs = await get_existing_songs(artist_name)
     if not artist:
         await message.reply("не нашел такого артиста...")

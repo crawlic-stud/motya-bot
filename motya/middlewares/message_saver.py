@@ -1,10 +1,11 @@
 import logging
+from typing import Any, Awaitable, Callable
 
-from aiogram import types
-from aiogram.dispatcher.middlewares import BaseMiddleware
+from aiogram import types, BaseMiddleware
 from filters.motya_command import COMMAND_PREFIX
 from models import MessageData
 from utils.database import CommonDb
+
 
 STORE_LIMIT = 5
 logger = logging.getLogger("messages")
@@ -16,13 +17,23 @@ class MessageSaver(BaseMiddleware):
         self.data = data
         self.database = database
 
-    async def on_pre_process_message(self, message: types.Message, data: dict):
+    async def __call__(
+        self,
+        handler: Callable[[types.Message, dict[str, Any]], Awaitable[Any]],
+        message: types.Message,
+        data: dict[str, Any],
+    ):
         msg_text = message.text
         chat_id = message.chat.id
-        user_id = message.from_id
+        res = handler(message, data)
+
+        if not message.from_user:
+            return await res
+
+        user_id = message.from_user.id
 
         if chat_id > 0 or msg_text is None:
-            return
+            return await res
 
         if not self.data.get(chat_id):
             self.data[chat_id] = []
@@ -40,3 +51,5 @@ class MessageSaver(BaseMiddleware):
             )
             self.database.save_messages(chat_id, self.data[chat_id])
             self.data[chat_id] = []
+
+        return await res

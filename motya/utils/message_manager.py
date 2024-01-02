@@ -1,18 +1,18 @@
-import io
 import random
 from pathlib import Path
 
-from aiogram import types
-from data.anekdots import ANEKDOTS_FOLDER
+from aiogram import Bot, types
 from markovify import Text
+from aiogram.utils.chat_action import ChatActionSender
 
+from data.anekdots import ANEKDOTS_FOLDER
 from .chat_history import CHAT_HISTORY_PATH, get_text_from_txt
 from .markov import generate_sentence, generate_sentence_with_start
 from handlers.query_data import RATE_DATA
 
 
-RATE_KEYBOARD = types.InlineKeyboardMarkup(1).add(
-    types.InlineKeyboardButton("💚", callback_data=RATE_DATA)  # type: ignore
+RATE_KEYBOARD = types.InlineKeyboardMarkup(
+    inline_keyboard=[[types.InlineKeyboardButton(text="💚", callback_data=RATE_DATA)]]  # type: ignore
 )
 
 
@@ -33,39 +33,40 @@ def _get_chat_history(chat_id: int) -> str:
     return text
 
 
-async def _get_text(messages: list[str]) -> str:
+async def _get_text(messages: list[str], chat_id: int | str, bot: Bot) -> str:
     if not messages:
         return ""
-    await types.ChatActions.typing()
-    text = "\n".join(messages)
-    return text
+    async with ChatActionSender.typing(bot=bot, chat_id=chat_id):
+        text = "\n".join(messages)
+        return text
 
 
-async def random_sentence_from_messages(messages: list[str]) -> str:
-    text = await _get_text(messages)
+async def random_sentence_from_messages(
+    messages: list[str], chat_id: int | str, bot: Bot
+) -> str:
+    text = await _get_text(messages, chat_id=chat_id, bot=bot)
     sentence = generate_sentence(text)
     return sentence.lower()
 
 
-async def random_sentence(messages: list[str], chat_id: int) -> str:
+async def random_sentence(messages: list[str], chat_id: int, bot: Bot) -> str:
     chat_history = _get_chat_history(chat_id)
-    text = await _get_text(messages)
+    text = await _get_text(messages, chat_id, bot=bot)
     sentence = generate_sentence(text + chat_history)
     return sentence.lower()
 
 
 async def random_sentence_with_start(
-    starts: list[str], messages: list[str], chat_id: int
+    starts: list[str], messages: list[str], chat_id: int, bot: Bot
 ) -> str:
     chat_history = _get_chat_history(chat_id)
-    text = await _get_text(messages)
+    text = await _get_text(messages, chat_id, bot)
     start = random.choice(starts)
     sentence = generate_sentence_with_start(text + chat_history, keyword=start)
     return sentence.lower()
 
 
 async def random_anekdot(state_size=3) -> str:
-    await types.ChatActions.typing()
     paths = _get_anekdots_paths()
     theme = random.choice(paths)
     model = Text(

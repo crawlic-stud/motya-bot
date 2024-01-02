@@ -1,7 +1,12 @@
-from aiogram import types
-from config import dp
+from aiogram import types, Router
+from aiogram.filters.command import CommandStart
 
 
-@dp.message_handler(commands=["start"])
+router = Router(name="basic")
+
+
+@router.message(CommandStart())
 async def send_start(message: types.Message):
-    await message.answer("Привет!")
+    await message.answer(
+        "привет, я мотя! добавляй меня в чатик и я разбавлю ваши серые будни!"
+    )

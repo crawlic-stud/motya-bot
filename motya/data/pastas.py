@@ -2,7 +2,8 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-from config import pastas_db, motya
+
+from config import pastas_db
 from models import MessageData
 
 

@@ -1,14 +1,16 @@
 import random
 
-from aiogram import types
-from config import dp, arguments_db
+from aiogram import types, Router
+from config import arguments_db
 from filters.reaction import Reaction
 from utils.tools import roll_chance
 
+
+router = Router(name="reactions")
 LAUGH_CHANCE = 10 / 100
 
 
-@dp.message_handler(Reaction(["аха", "ахх", "хах", "хха"]))
+@router.message(Reaction(["аха", "ахх", "хах", "хха"]))
 async def send_hahaha(message: types.Message):
     patterns = ["AXA", "XA", "AX", "ПХ", "BX"]
     patterns_lower = list(map(str.lower, patterns))
@@ -20,7 +22,7 @@ async def send_hahaha(message: types.Message):
         await message.answer(laugh)
 
 
-@dp.message_handler(Reaction(["ссор", "ругат", "ругал", "поссор", "руган"]))
+@router.message(Reaction(["ссор", "ругат", "ругал", "поссор", "руган"]))
 async def update_arguments_count(message: types.Message):
     arg_time = arguments_db.get_days_since_last_argument(message.chat.id)
     arguments_db.insert_new_argument(message.chat.id)

@@ -1,5 +1,5 @@
 from aiogram import Bot, types
-from aiogram.dispatcher.filters import Filter
+from aiogram.filters import Filter
 
 
 class Reply(Filter):
@@ -7,8 +7,13 @@ class Reply(Filter):
         super().__init__()
         self.bot = bot
 
-    async def check(self, message: types.Message) -> bool:
+    async def __call__(self, message: types.Message) -> bool:
         reply = message.reply_to_message
-        if reply is not None and reply.from_id == self.bot.id:
+
+        if (
+            reply is not None
+            and reply.from_user is not None
+            and reply.from_user.id == self.bot.id
+        ):
             return True
         return False
