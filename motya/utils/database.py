@@ -1,8 +1,12 @@
 from datetime import datetime
+from functools import lru_cache
 from typing import Any
 
 import pymongo
 from models import MessageData, ArgumentTimeElapsed
+
+
+rating_cache = set()
 
 
 class CommonDb:
@@ -67,3 +71,16 @@ class SongsDb(Database):
 
     def get_all_songs(self):
         return [song["lyrics"] for song in self.collection.find()]
+
+
+class RatingDb(Database):
+    def is_rated(self, message_id: str) -> bool:
+        if message_id in rating_cache:
+            return True
+        res = self.collection.find_one({"message_id": message_id}) is not None
+        if res:
+            rating_cache.add(message_id)
+        return res
+
+    def add_to_rating(self, message_id: str):
+        self.collection.insert_one({"message_id": message_id})
