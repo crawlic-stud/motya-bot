@@ -3,8 +3,7 @@ from pathlib import Path
 
 from aiogram import types, F, Router
 
-# from aiogram.exceptions import Tel
-from config import dp, motya
+from config import motya
 from filters.file import FileFilter
 from utils.chat_history import CHAT_HISTORY_PATH, get_texts_from_json, save_texts_to_txt
 

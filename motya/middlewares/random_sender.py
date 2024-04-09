@@ -3,6 +3,7 @@ import logging
 from typing import Any, Awaitable, Callable
 
 from aiogram import Bot, types, BaseMiddleware
+
 from utils.database import CommonDb
 from utils.message_manager import answer_with_kb, random_sentence
 from utils.tools import roll_chance

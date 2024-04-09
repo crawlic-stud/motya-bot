@@ -88,6 +88,16 @@ async def get_song_for_artist(message: types.Message):
 
 @router.message(
     MotyaCommand(
+        ["слова", "облако", "вордклауд"],
+        description="показываю самые часто используемые слова",
+    )
+)
+async def send_wordcloud(message: types.Message):
+    ...
+
+
+@router.message(
+    MotyaCommand(
         [""],
         description="пишу в чатик",
     )

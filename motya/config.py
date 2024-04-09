@@ -4,8 +4,7 @@ import os
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from dotenv import load_dotenv
-from middlewares.message_saver import MessageSaver
-from middlewares.random_sender import RandomSender
+
 from utils.database import ArgumentsDb, CommonDb, PastasDb, RatingDb, SongsDb
 from utils.image_api import Text2ImageAPI
 
@@ -37,7 +36,3 @@ arguments_db = ArgumentsDb(MONGO_URL, DB_NAME, "arguments")  # type: ignore
 songs_db = SongsDb(MONGO_URL, DB_NAME, "songs")  # type: ignore
 rating_db = RatingDb(MONGO_URL, DB_NAME, "rating")  # type: ignore
 rating_db.collection.create_index("message_id")
-
-# middleware for saving messages to DB
-dp.message.middleware(MessageSaver(messages_data, common_db))
-dp.message.middleware(RandomSender(common_db, motya))

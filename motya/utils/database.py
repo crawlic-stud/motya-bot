@@ -1,8 +1,8 @@
 from datetime import datetime
-from functools import lru_cache
 from typing import Any
 
 import pymongo
+
 from models import MessageData, ArgumentTimeElapsed
 
 
