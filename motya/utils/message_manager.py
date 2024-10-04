@@ -8,12 +8,6 @@ from aiogram.utils.chat_action import ChatActionSender
 from data.anekdots import ANEKDOTS_FOLDER
 from .chat_history import CHAT_HISTORY_PATH, get_text_from_txt
 from .markov import generate_sentence, generate_sentence_with_start
-from handlers.query_data import RATE_DATA
-
-
-RATE_KEYBOARD = types.InlineKeyboardMarkup(
-    inline_keyboard=[[types.InlineKeyboardButton(text="💚", callback_data=RATE_DATA)]]  # type: ignore
-)
 
 
 def _get_anekdots_paths() -> list[Path]:
@@ -78,9 +72,7 @@ async def random_anekdot(state_size=3) -> str:
 
 async def reply_with_kb(message: types.Message, text: str):
     return await message.reply(text)
-    # return await message.reply(text, reply_markup=RATE_KEYBOARD)
 
 
 async def answer_with_kb(message: types.Message, text: str):
     return await message.answer(text)
-    # return await message.answer(text, reply_markup=RATE_KEYBOARD)
