@@ -13,9 +13,7 @@ class GameState(StatesGroup):
     wordle = State()
 
 
-@router.message(
-    MotyaCommand(["отмена", "стоп"], description="отмена игры", strict=True)
-)
+@router.message(MotyaCommand(["отмена", "стоп"], description="отмена игры", strict=True))
 async def cancel_game(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is None:
@@ -24,13 +22,9 @@ async def cancel_game(message: types.Message, state: FSMContext):
     await message.reply("отменил игру.")
 
 
-@router.message(
-    MotyaCommand(["виселица", "игра"], description="игра в виселицу", strict=True)
-)
+@router.message(MotyaCommand(["виселица", "игра"], description="игра в виселицу", strict=True))
 async def start_hangman_game(message: types.Message, state: FSMContext):
-    await message.reply(
-        "поиграем в виселицу! чтобы закончить, скажи: <i>мотя отмена</i> или <i>мотя стоп</i>"
-    )
+    await message.reply("поиграем в виселицу! чтобы закончить, скажи: <i>мотя отмена</i> или <i>мотя стоп</i>")
     word = get_word(message.chat.id, 10)
     game = HangmanGame(word.lower())
     await state.update_data({"game": game})
@@ -72,13 +66,9 @@ async def run_hangman_game(message: types.Message, state: FSMContext):
         )
 
 
-@router.message(
-    MotyaCommand(["вордл", "wordle"], description="игра в wordle", strict=True)
-)
+@router.message(MotyaCommand(["вордл", "wordle"], description="игра в wordle", strict=True))
 async def start_wordle_game(message: types.Message, state: FSMContext):
-    await message.reply(
-        "поиграем в wordle! чтобы закончить, скажи: <i>мотя отмена</i> или <i>мотя стоп</i>"
-    )
+    await message.reply("поиграем в wordle! чтобы закончить, скажи: <i>мотя отмена</i> или <i>мотя стоп</i>")
     word = get_word(message.chat.id, 6)
     await state.update_data({"game": WordleGame(word.lower())})
     await state.set_state(GameState.wordle)

@@ -54,11 +54,7 @@ async def timeout():
 
 
 async def get_artist_songs(artist_api_path: str) -> list[Song]:
-    url = (
-        BASE_URL
-        + artist_api_path
-        + "/songs?page={page}&per_page=20&sort=popularity&text_format=html%2Cmarkdown"
-    )
+    url = BASE_URL + artist_api_path + "/songs?page={page}&per_page=20&sort=popularity&text_format=html%2Cmarkdown"
     songs = []
     max_recursion = 100
     async with aiohttp.ClientSession() as session:

@@ -35,9 +35,7 @@ async def _get_text(messages: list[str], chat_id: int | str, bot: Bot) -> str:
         return text
 
 
-async def random_sentence_from_messages(
-    messages: list[str], chat_id: int | str, bot: Bot
-) -> str:
+async def random_sentence_from_messages(messages: list[str], chat_id: int | str, bot: Bot) -> str:
     text = await _get_text(messages, chat_id=chat_id, bot=bot)
     sentence = generate_sentence(text)
     return sentence.lower()
@@ -50,9 +48,7 @@ async def random_sentence(messages: list[str], chat_id: int, bot: Bot) -> str:
     return sentence.lower()
 
 
-async def random_sentence_with_start(
-    starts: list[str], messages: list[str], chat_id: int, bot: Bot
-) -> str:
+async def random_sentence_with_start(starts: list[str], messages: list[str], chat_id: int, bot: Bot) -> str:
     chat_history = _get_chat_history(chat_id)
     text = await _get_text(messages, chat_id, bot)
     start = random.choice(starts)
@@ -63,9 +59,7 @@ async def random_sentence_with_start(
 async def random_anekdot(state_size=3) -> str:
     paths = _get_anekdots_paths()
     theme = random.choice(paths)
-    model = Text(
-        theme.read_text(encoding="utf-8"), well_formed=True, state_size=state_size
-    )
+    model = Text(theme.read_text(encoding="utf-8"), well_formed=True, state_size=state_size)
     sentence = model.make_sentence(tries=1000) or ""
     return sentence.lower()
 

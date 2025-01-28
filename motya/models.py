@@ -32,9 +32,7 @@ class ArgumentTimeElapsed:
         )
 
     def __str__(self) -> str:
-        return (
-            f"{self.days} дн. {self.hours} ч. {self.minutes} мин. {self.seconds} сек."
-        )
+        return f"{self.days} дн. {self.hours} ч. {self.minutes} мин. {self.seconds} сек."
 
 
 @dataclass
@@ -44,16 +42,10 @@ class CommandInfo:
     description: str
 
     def render_html(self):
-        prefix_commands = [
-            f"<i>{self.command_prefix} {command}</i>" for command in self.commands
-        ]
+        prefix_commands = [f"<i>{self.command_prefix} {command}</i>" for command in self.commands]
         commands_str = ", ".join(prefix_commands)
         return f"• {commands_str} - {self.description}"
 
 
 if __name__ == "__main__":
-    print(
-        ArgumentTimeElapsed.from_timedelta(
-            datetime.datetime.now() - datetime.datetime(2023, 11, 1, 1, 19, 0)
-        )
-    )
+    print(ArgumentTimeElapsed.from_timedelta(datetime.datetime.now() - datetime.datetime(2023, 11, 1, 1, 19, 0)))

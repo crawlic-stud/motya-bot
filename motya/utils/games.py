@@ -61,18 +61,14 @@ class WordleGame:
         return "\n".join(game_rendered)
 
 
-def messages_to_words(
-    messages: list[str], max_word_length: int = 10, min_word_length: int = 5
-) -> list[str]:
+def messages_to_words(messages: list[str], max_word_length: int = 10, min_word_length: int = 5) -> list[str]:
     words = []
     for message in messages:
         msg_words = message.split()
         msg_words = [
             word
             for word in msg_words
-            if len(word) <= max_word_length
-            and len(word) > min_word_length
-            and word.isalpha()
+            if len(word) <= max_word_length and len(word) > min_word_length and word.isalpha()
         ]
         words.extend(msg_words)
     return words

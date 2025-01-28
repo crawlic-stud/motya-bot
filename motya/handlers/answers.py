@@ -9,9 +9,7 @@ router = Router(name="answers")
 
 async def answer_starts_with(starts: list[str], message: types.Message):
     messages = common_db.get_messages_from_chat(message.chat.id)
-    sentence = await random_sentence_with_start(
-        starts, messages, message.chat.id, bot=motya
-    )
+    sentence = await random_sentence_with_start(starts, messages, message.chat.id, bot=motya)
     await reply_with_kb(message, sentence) if sentence else None
 
 

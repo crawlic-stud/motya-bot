@@ -1,4 +1,3 @@
-from distutils.sysconfig import PREFIX
 from aiogram import types
 from aiogram.filters import Filter
 
@@ -10,9 +9,7 @@ motya_commands: list[CommandInfo] = []
 
 
 class MotyaCommand(Filter):
-    def __init__(
-        self, commands: list[str], description: str | None = None, strict: bool = False
-    ) -> None:
+    def __init__(self, commands: list[str], description: str | None = None, strict: bool = False) -> None:
         super().__init__()
         self.commands = commands
         self.strict = strict
@@ -25,21 +22,15 @@ class MotyaCommand(Filter):
         is_prefixed = msg.startswith(COMMAND_PREFIX)
         if self.strict:
             msg = msg.replace(COMMAND_PREFIX, "").strip()
-            is_command = is_prefixed and any(
-                command in msg.split() for command in self.commands
-            )
+            is_command = is_prefixed and any(command in msg.split() for command in self.commands)
         else:
-            is_command = is_prefixed and any(
-                command in msg for command in self.commands
-            )
+            is_command = is_prefixed and any(command in msg for command in self.commands)
 
         return is_command
 
 
 class MotyaQuestion(MotyaCommand):
-    def __init__(
-        self, commands: list[str], description: str, strict: bool = False
-    ) -> None:
+    def __init__(self, commands: list[str], description: str, strict: bool = False) -> None:
         super().__init__(commands, description, strict)
 
     async def __call__(self, message: types.Message) -> bool:

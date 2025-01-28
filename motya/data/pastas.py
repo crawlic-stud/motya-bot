@@ -9,9 +9,7 @@ from models import MessageData
 
 def save_pastas(pastas):
     print("\n---------------------SAVING---------------------\n")
-    pastas_db.insert_pastas(
-        [MessageData(0, text).prepare_to_save() for text in pastas if text]
-    )
+    pastas_db.insert_pastas([MessageData(0, text).prepare_to_save() for text in pastas if text])
 
 
 def feed_copypastas_to_bot():

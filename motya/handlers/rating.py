@@ -32,9 +32,7 @@ async def handle_rate(message: types.MessageReactionUpdated):
 
     try:
         msg = await motya.forward_message(ADMIN_ID, message.chat.id, message.message_id)
-        logger.info(
-            f"Forwarding message {message.message_id} from chat {message.chat.id}"
-        )
+        logger.info(f"Forwarding message {message.message_id} from chat {message.chat.id}")
     except TelegramBadRequest as e:
         logger.error(f"Error sending: {e}")
         return

@@ -9,7 +9,7 @@ import aiohttp
 from dotenv import load_dotenv
 
 
-MAX_ATTEMPTS = 10
+MAX_ATTEMPTS = 20
 logger = logging.getLogger("text2img")
 
 
@@ -45,21 +45,22 @@ class Text2ImageAPI:
         session: aiohttp.ClientSession,
         request_id: str,
         attempts: int = MAX_ATTEMPTS,
-        delay_seconds: int = 10,
+        delay_seconds: int = 30,
     ):
         while attempts > 0:
-            logger.info(f"attempt: {MAX_ATTEMPTS - attempts + 1}")
-            async with session.get(
-                self.url + "key/api/v1/text2image/status/" + request_id
-            ) as response:
+            logger.info(f"attempt: {MAX_ATTEMPTS - attempts + 1} / {MAX_ATTEMPTS}")
+            async with session.get(self.url + "key/api/v1/text2image/status/" + request_id) as response:
                 data = await response.json()
 
             if data["status"] == "DONE":
-                logger.info("DONE")
+                logger.info(f"DONE in {data.get('generationTime')} seconds")
                 return data["images"]
+            else:
+                logger.info(f"{data=}")
 
             attempts -= 1
             await asyncio.sleep(delay_seconds)
+        logger.error(f"Generation failed.")
 
     def _create_form_data(self, params: dict[str, Any], model_id: int):
         form_data = aiohttp.FormData()

@@ -8,8 +8,6 @@ class FileFilter(Filter):
         self.extension = extension
 
     async def __call__(self, message: types.Message) -> bool:
-        if not message.document or not (message.document.file_name or "").endswith(
-            self.extension
-        ):
+        if not message.document or not (message.document.file_name or "").endswith(self.extension):
             return False
         return True

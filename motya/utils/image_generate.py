@@ -5,9 +5,7 @@ from aiogram import types
 from config import image_api
 
 
-async def reply_with_image(
-    message: types.Message, prompt: str, caption: str | None = None
-):
+async def reply_with_image(message: types.Message, prompt: str, caption: str | None = None):
     motya_prompt = (
         f"{prompt}\n"
         "стиль: детский рисунок, кривые линии, простой рисунок, разноцветный рисунок, карандашный рисунок, "

@@ -20,9 +20,7 @@ router = Router(name="commands")
 downloading_songs = set()
 
 
-@router.message(
-    MotyaCommand(["нарисуй", "рисунок"], description="рисую на заказ", strict=True)
-)
+@router.message(MotyaCommand(["нарисуй", "рисунок"], description="рисую на заказ", strict=True))
 async def send_photo(message: types.Message):
     tmp = await message.reply("рисую, подожди немного друг")
     txt = message.text.lower() if message.text else ""
@@ -31,9 +29,7 @@ async def send_photo(message: types.Message):
     await tmp.delete()
 
 
-@router.message(
-    MotyaCommand(["анекдот", "анек"], description="рассказываю анекдот", strict=True)
-)
+@router.message(MotyaCommand(["анекдот", "анек"], description="рассказываю анекдот", strict=True))
 async def send_anekdot(message: types.Message):
     anekdot = await random_anekdot(3)
     if not anekdot:
@@ -51,9 +47,7 @@ async def send_pasta(message: types.Message):
     await reply_with_kb(message, sentence)
 
 
-@router.message(
-    MotyaCommand(["ссора", "время"], description="пишу время с последней ссоры")
-)
+@router.message(MotyaCommand(["ссора", "время"], description="пишу время с последней ссоры"))
 async def get_time_since_last_argument(message: types.Message):
     arg_time = arguments_db.get_days_since_last_argument(message.chat.id)
     await message.reply(f"с прошлой ссоры прошло {arg_time}")
@@ -92,8 +86,7 @@ async def get_song_for_artist(message: types.Message):
         description="показываю самые часто используемые слова",
     )
 )
-async def send_wordcloud(message: types.Message):
-    ...
+async def send_wordcloud(message: types.Message): ...
 
 
 @router.message(

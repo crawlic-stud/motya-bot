@@ -1,12 +1,52 @@
 from datetime import datetime
+from functools import wraps
+import logging
+import sys
 from typing import Any
 
 import pymongo
+from pymongo.cursor import Cursor
 
 from models import MessageData, ArgumentTimeElapsed
 
 
 rating_cache = set()
+logger = logging.getLogger("db")
+
+MESSAGES_LIMIT = 15_000
+MAX_CACHE_SIZE_KB = 50 * 1024  # 50 MB
+CACHE_MESSAGES_SECONDS = 300  # 5 minutes
+
+
+class ExpiringCache:
+    def __init__(self, expiration_time):
+        self.expiration_time = expiration_time
+        self.cache = {}
+
+    def cache_size_kb(self):
+        total_size = sys.getsizeof(self.cache)
+        for key, value in self.cache.items():
+            total_size += sys.getsizeof(key) + sys.getsizeof(value)
+        return total_size / 1024
+
+    def __call__(self, func):
+        @wraps(func)
+        def wrapper(*args):
+            cache_size = self.cache_size_kb()
+            logger.info(f"Cache size {cache_size} KB")
+            if cache_size > MAX_CACHE_SIZE_KB:
+                self.cache.clear()
+            current_time = datetime.now().timestamp()
+            if args in self.cache:
+                value, timestamp = self.cache[args]
+                if current_time - timestamp < self.expiration_time:
+                    return value
+            logger.info(f"Cache miss for {func.__name__} with args {args}")
+            value = func(*args)
+            self.cache[args] = (value, current_time)
+            return value
+
+        return wrapper
 
 
 class CommonDb:
@@ -16,15 +56,19 @@ class CommonDb:
     def _get_chat_collection(self, chat_id: int):
         return self.db[str(chat_id)]
 
-    def _get_messages(self, chat_id: int) -> list[Any]:
-        return [item for item in self._get_chat_collection(chat_id).find()]
+    def _get_messages(self, chat_id: int) -> Cursor[Any]:
+        logger.info(f"Getting messages from chat {chat_id} with limit {MESSAGES_LIMIT}")
+        return self._get_chat_collection(chat_id).find().limit(MESSAGES_LIMIT)
 
     def save_messages(self, chat_id: int, messages: list[MessageData]) -> None:
         new_messages = [message.prepare_to_save() for message in messages]
         self._get_chat_collection(chat_id).insert_many(new_messages)
 
+    @ExpiringCache(expiration_time=CACHE_MESSAGES_SECONDS)
     def get_messages_from_chat(self, chat_id: int) -> list[str]:
-        return [message["text"] for message in self._get_messages(chat_id)]
+        messages = [message["text"] for message in self._get_messages(chat_id)]
+        logger.info(f"Got {len(messages)} messages from chat {chat_id}")
+        return messages
 
 
 class Database(CommonDb):

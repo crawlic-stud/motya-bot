@@ -32,9 +32,7 @@ async def send_thank_you(message: types.Message):
 
 @router.message(MotyaCommand(["как дела"]))
 async def send_whats_up(message: types.Message):
-    answer = random.choice(
-        ["норм все", "все хорошо", "я в тильте", "супер", "все четко"]
-    )
+    answer = random.choice(["норм все", "все хорошо", "я в тильте", "супер", "все четко"])
     await message.reply(answer)
 
 

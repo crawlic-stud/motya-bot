@@ -14,14 +14,7 @@ def get_texts_from_json(path: Path) -> list[str]:
         if isinstance(message_text, str):
             texts.append(message_text)
         elif isinstance(message_text, list):
-            texts.append(
-                "".join(
-                    [
-                        item if isinstance(item, str) else item["text"]
-                        for item in message_text
-                    ]
-                )
-            )
+            texts.append("".join([item if isinstance(item, str) else item["text"] for item in message_text]))
     return texts
 
 
