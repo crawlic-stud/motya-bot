@@ -38,28 +38,33 @@ class Text2ImageAPI:
         ) as response:
             data = await response.json()
             logger.info(data)
-        return data["uuid"]
+        return data["uuid"], data.get("status_time")
 
     async def _check_generation(
         self,
         session: aiohttp.ClientSession,
         request_id: str,
         attempts: int = MAX_ATTEMPTS,
-        delay_seconds: int = 30,
+        delay_seconds: int = 10,
+        estimated_time: int | None = None,
     ):
+        if estimated_time:
+            logger.info(f"Starting to generate. Estimated time is {estimated_time} seconds")
+
         while attempts > 0:
-            logger.info(f"attempt: {MAX_ATTEMPTS - attempts + 1} / {MAX_ATTEMPTS}")
             async with session.get(self.url + "key/api/v1/text2image/status/" + request_id) as response:
                 data = await response.json()
+
+            current_attempt = MAX_ATTEMPTS - attempts + 1
+            wait_delay = estimated_time if (current_attempt == 1 and estimated_time is not None) else delay_seconds
+            logger.info(f"attempt: {current_attempt} / {MAX_ATTEMPTS}, status={data['status']}, {wait_delay=}")
 
             if data["status"] == "DONE":
                 logger.info(f"DONE in {data.get('generationTime')} seconds")
                 return data["images"]
-            else:
-                logger.info(f"{data=}")
 
             attempts -= 1
-            await asyncio.sleep(delay_seconds)
+            await asyncio.sleep(wait_delay)
         logger.error(f"Generation failed.")
 
     def _create_form_data(self, params: dict[str, Any], model_id: int):
@@ -96,21 +101,7 @@ class Text2ImageAPI:
                 "generateParams": {"query": prompt},
             }
             form_data = self._create_form_data(params, model_id)
-            uuid = await self._start_generate(session, form_data)
-            images = await self._check_generation(session, uuid)
+            uuid, estimated_time = await self._start_generate(session, form_data)
+            images = await self._check_generation(session, uuid, estimated_time=estimated_time)
         if images:
             return self._decode_base64(images[0])
-
-
-if __name__ == "__main__":
-    load_dotenv()
-    logging.basicConfig(level=logging.INFO)
-    API_KEY = os.getenv("FUSION_API_KEY")
-    SECRET_KEY = os.getenv("FUSION_SECRET_KEY")
-    api = Text2ImageAPI("https://api-key.fusionbrain.ai/", API_KEY, SECRET_KEY)
-    image = asyncio.run(api.generate_image("утка червь зелень"))
-    if image:
-        with open("test.png", "wb") as f:
-            f.write(image)
-    else:
-        print("no image")
