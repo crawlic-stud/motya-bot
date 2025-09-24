@@ -6,3 +6,4 @@ markovify
 requests
 bs4
 pydantic
+openai
