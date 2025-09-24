@@ -1,4 +1,6 @@
+import random
 from aiogram import types, Router
+from aiogram.utils.chat_action import ChatActionSender
 
 from config import pastas_db, arguments_db, common_db, motya
 from filters.motya_command import MotyaCommand
@@ -14,7 +16,7 @@ from utils.message_manager import (
     random_sentence_from_messages,
     reply_with_kb,
 )
-
+from utils.thinking_module import call_ai
 
 router = Router(name="commands")
 downloading_songs = set()
@@ -89,6 +91,16 @@ async def get_song_for_artist(message: types.Message):
 async def send_wordcloud(message: types.Message): ...
 
 
+@router.message(MotyaCommand(["че дум", "че думаешь", "что думаешь", "чо думаешь", "дум", "думаешь"]))
+async def ask_ai(message: types.Message):
+    messages = common_db.get_messages_for_ai(message.chat.id, random.randint(25, 100))
+    messages_text = "\n\n".join(messages)
+    async with ChatActionSender.typing(bot=message.bot, chat_id=message.chat.id):  # type: ignore
+        answer = call_ai(messages_text, message.text or "")
+
+    await message.reply(answer.lower())
+
+
 @router.message(
     MotyaCommand(
         [""],
@@ -105,4 +117,5 @@ async def send_random_message(message: types.Message):
 
 @router.message(Reply(bot=motya))
 async def answer_more(message: types.Message):
+
     return await send_random_message(message)

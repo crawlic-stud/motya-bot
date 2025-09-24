@@ -56,18 +56,26 @@ class CommonDb:
     def _get_chat_collection(self, chat_id: int):
         return self.db[str(chat_id)]
 
-    def _get_messages(self, chat_id: int) -> Cursor[Any]:
-        logger.info(f"Getting messages from chat {chat_id} with limit {MESSAGES_LIMIT}")
-        return self._get_chat_collection(chat_id).find().limit(MESSAGES_LIMIT)
+    def _get_messages(self, chat_id: int, limit: int = 0) -> Cursor[Any]:
+        logger.info(f"Getting messages from chat {chat_id} with limit {limit}")
+        if not limit:
+            limit = MESSAGES_LIMIT
+        return self._get_chat_collection(chat_id).find().limit(limit).sort("_id", pymongo.DESCENDING)
 
     def save_messages(self, chat_id: int, messages: list[MessageData]) -> None:
         new_messages = [message.prepare_to_save() for message in messages]
         self._get_chat_collection(chat_id).insert_many(new_messages)
 
     @ExpiringCache(expiration_time=CACHE_MESSAGES_SECONDS)
-    def get_messages_from_chat(self, chat_id: int) -> list[str]:
-        messages = [message["text"] for message in self._get_messages(chat_id)]
+    def get_messages_from_chat(self, chat_id: int, limit: int = 0) -> list[str]:
+        messages = [message["text"] for message in self._get_messages(chat_id, limit)]
         logger.info(f"Got {len(messages)} messages from chat {chat_id}")
+        return messages
+
+    @ExpiringCache(expiration_time=10)
+    def get_messages_for_ai(self, chat_id: int, limit: int = 0) -> list[str]:
+        messages = [f"{message['user_id']}:\n{message['text']}" for message in self._get_messages(chat_id, limit)]
+        logger.info(f"Got {len(messages)} messages from chat for ai {chat_id}")
         return messages
 
 

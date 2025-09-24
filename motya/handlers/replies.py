@@ -1,8 +1,9 @@
 import random
 
 from aiogram import types, Router
+
 from filters.motya_command import MotyaCommand
-from utils.tools import roll_chance, words_after
+from utils.tools import words_after
 
 router = Router(name="replies")
 
